@@ -1,0 +1,153 @@
+% ----------------------------------------------------------------------
+%---------------------------------------------------------------------
+\documentclass[letterpaper,11pt]{upiita}
+\usepackage{configuracion/upiitatesis}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{enumitem}
+\usepackage{float}
+%%%%%%%%%%%%%  Datos de la Portada y acta
+\title{SISTEMA INTELIGENTE BASADO EN APRENDIZAJE AUTOMÁTICO PARA LA RECOMENDACIÓN VOCACIONAL DE CARRERAS DEL INSTITUTO POLITÉCNICO NACIONAL EN LA CIUDAD DE MÉXICO}
+\unidad{\Upiita}
+\mes{Octubre}                               %%%% mes
+\anio{2026}                              %%%% año
+%\impreso{pdf}							%%%% opciones: pdf, papel
+\nalumnos{2}
+%%%%%%% dependiendo del numero de alumnos máximo 4,
+%%%%%%%  eliminar o comentar la líneas, 1 alumno  =alumnoa
+\alumnoa{Emanuel Tristan San Pedro Texis}
+\alumnob{Jacobo Emiliano Monroy Cortines}
+%%%%%%%%%% número de asesores 1= solo se toma en cuenta la variable asesora,
+%%%%%%%%%%  2= se toman asesora y asesorb
+\nasesores{2}
+%%%%%%% en caso de un único asesor asesora,
+%%%%%%%  eliminar o comentar las líneas
+\asesora{Dra. Marbella Calvino Gallardo}
+\asesorb{Ing. Francisco Salvador Muñoz Gómez}
+%%%%%% Inicio de documento %%%%%%
+\begin{document}
+\makeatletter \def\@roman#1{\romannumeral #1}\makeatother
+\makeatletter
+\let\originalcleardoublepage\cleardoublepage
+\let\originalcleartooddpage\cleartooddpage
+\let\cleardoublepage\clearpage
+\let\cleartooddpage\clearpage
+\makeatother
+\makeatletter
+\renewcommand{\frontmatter}{%
+  \cambiamargen
+  \pagenumbering{roman}
+  \setcounter{page}{1}
+  \@mainmatterfalse
+}
+\makeatother
+\frontmatter
+\setlength{\oddsidemargin}{16pt}
+\setlength{\evensidemargin}{16pt}
+\renewcommand{\Vlines}{%
+  \def\VL{\rule[0pt]{1pt}{14cm}\hspace{1mm}\relax}%
+  \VL\VL\VL\VL\VL}
+\makeatletter
+\patchcmd{\@makeschapterhead}{\vspace*{50\p@}}{\vspace*{0\p@}}{}{}
+\patchcmd{\@makechapterhead}{\vspace*{50\p@}}{\vspace*{0\p@}}{}{}
+\renewcommand{\DOCH}{%
+  \raggedright
+  \CNV\FmN{\@chapapp}\space
+  {\fontsize{50}{60}\selectfont \CNoV\thechapter}\par\nobreak
+  \vskip 10\p@}
+\renewcommand{\DOTI}[1]{%
+  \CTV\raggedright\FmTi{#1}\par\nobreak
+  \vskip 10\p@}
+\renewcommand{\DOTIS}[1]{%
+  \CTV\raggedright\FmTi{#1}\par\nobreak
+  \vskip 10\p@}
+\renewcommand{\@dottedtocline}[5]{%
+  \ifnum #1>\c@tocdepth\else
+    \vskip 1em \@plus\p@
+    {\setlength{\@tempdima}{#3}%
+     \leftskip #2\relax
+     \rightskip \@tocrmarg
+     \parfillskip -\rightskip
+     \parindent #2\relax
+     \leavevmode
+     \advance\leftskip #3\relax
+     \hskip -\leftskip
+     #4\nobreak\hfill
+     \nobreak\hb@xt@\@pnumwidth{\hss #5}\par
+     \penalty\@highpenalty
+    }%
+  \fi}
+\renewcommand{\l@section}{\@dottedtocline{1}{1.5em}{3.5em}}
+\renewcommand{\l@subsection}{\@dottedtocline{2}{3.8em}{5em}}
+\renewcommand{\l@subsubsection}{\@dottedtocline{3}{7em}{7em}}
+\renewcommand{\l@paragraph}{\@dottedtocline{4}{10em}{7em}}
+\makeatother
+%%%%% Inicio de Sección de preliminares
+%%Preliminar
+%%creacion de carátula y hoja de actas
+\makeatletter
+\def\@materia{}
+\def\@grado{}
+\def\contentsname{Índice general}
+\makeatother
+\portada                  %% Portad
+\input{preliminares/resumen}                 %%%modificar archivo preliminares/resumen.tex
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Índice general}
+\tabladecontenido
+\listadefiguras
+\listadetablas
+\Introduccion                                 %%%modificar archivo preliminares/introduccion.tex
+%%%% Contiene los siguientes elementos
+%% Definición del problema
+%% Justificación
+%% Objetivo
+%%      %%General
+%%      %%Específico
+%% enfoque mecatrónico
+%% Antecedentes
+%% Capitulado descripción general del documento mencionando contenidos de cada
+%%              capitulo ;Descripción de los capítulos
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%% Inicia Capítulos del trabajo%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%  capitulo 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{capitulos/marco_metodologico}
+%%% modificar archivo capitulos/marco_metodologico.tex
+\MarcodeReferencia
+%%% modificar archivo capitulos/diseno_sistema.tex
+\include{capitulos/desarrollo_sistema}
+%%% modificar archivo capitulos/desarrollo_sistema.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  \final
+\include{capitulos/pruebas_resultados}
+%%% modificar archivo capitulos/pruebas_resultados.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%Ajusta el contador de secciones y subsecciones para ete capítulo
+\setcounter{secnumdepth}{-1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{capitulos/conclusion_trabajo_futuro}
+%%% modificar archivo capitulos/conclusion_trabajo_futuro.tex
+\let\cleardoublepage\originalcleardoublepage
+\let\cleartooddpage\originalcleartooddpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%  BIBLIOGRAFIA  %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%   \adicional
+\referencias
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%    APENDICES  %%%%%%%%%%%%%%%%%%%%%%%%%%%
+\backmatter
+\part{Anexos}
+\anexo
+\include{apendices/anexo1}
+\include{apendices/anexo2}
+\include{apendices/anexo3}
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%  INDICE ALFABÉTICO%%%%%%%%%%
+\IndiceAlfabetico
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

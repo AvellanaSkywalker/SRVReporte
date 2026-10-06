@@ -1,0 +1,387 @@
+
+\chapter{Introducción}
+%% Este 'capitulo' o sección del documento no  numera ni secciones o subsecciones, se utiliza el esquema de libro para ordenar la información
+El capítulo presenta los elementos fundamentales que dan origen al desarrollo del proyecto.
+Se expone el planteamiento del problema con el fin de identificar la necesidad que motiva la investigación,
+ así como el objetivo y las acciones que orientan a su realización. 
+ De igual manera se describe la justificación que sustenta el trabajo, junto a las delimitaciones para su ejecución. 
+ Finalmente se exploran trabajos similares para la investigación, así como el marco teórico que aporta los conceptos fundamentales para comprender el proyecto.  
+
+\section{Planteamiento del problema}
+El Instituto Politécnico Nacional (IPN) ofrece herramientas digitales de orientación vocacional para apoyar el proceso de elección profesional de los aspirantes a ingresar.
+Sin embargo, estas herramientas suelen limitarse a ofrecer un área de estudio, debido a que algunas se encuentran desactualizadas y se basan en sistemas deterministas estáticos. 
+Desde la perspectiva de la orientación profesional, una buena parte de los instrumentos utilizados históricamente para apoyar decisiones vocacionales (cuestionarios de autoinforme, entrevistas o pruebas de rasgos)
+carecen con frecuencia de los niveles mínimos de fiabilidad (consistencia de la medición en el tiempo y entre aplicadores) y validez.
+El propio debate iniciado por McClelland sobre las limitaciones de los test estandarizados de inteligencia para predecir el desempeño de las personas ilustra que la comunidad de orientación
+profesional lleva más de cincuenta años cuestionando la suficiencia de las pruebas psicométricas tradicionales cuando se aplican de forma descontextualizada.
+
+Esta situación se agrava debido al sesgo geográfico de las pruebas tradicionales diseñadas para EE.UU. y Europa (como Raven y Terman) construidas con muestras que no reflejan la realidad demográfica de
+México. De acuerdo con Andrea Vargas[4] la mayoría de las pruebas que se convirtieron en estándar del mercado laboral mexicano (Raven, Terman, 16PF, Wonderlic, Cleaver, LIFO, Barsit, Kostic y Zavic)
+fueron diseñadas y normadas originalmente en esos contextos, al llegar a México, fueron traducidas al español, pero rara vez renormadas con población mexicana, de modo que los baremos no reflejan 
+necesariamente la realidad demográfica, educativa ni cultural del país. A este sesgo se suma un problema de vigencia temporal, donde incluso los instrumentos más "recientes" de este catálogo
+tienen más de 25 años de antigüedad, diseñados para un mundo laboral previo a transformaciones como el trabajo remoto o colaboración multidisciplinarios.
+
+Adicionalmente se identifican problemáticas como la deserción escolar y desbalance en la elección de carrera a nivel superior, aspectos relevantes en este contexto.
+%%%%%%%%%%%%%%%
+
+\section{Objetivos}
+
+\textbf{Objetivo general:}
+
+Desarrollar un sistema inteligente basado en aprendizaje automático para la recomendación vocacional de carreras del Instituto Politécnico Nacional en la Ciudad de México.
+
+\medskip
+
+\textbf{Objetivos específicos:}
+
+\begin{enumerate}
+    \item Construir una arquitectura de procesamiento basada en servicios modulares que gestione el flujo de comunicación operativo, definiendo una arquitectura orientada a microservicios que separe las
+    responsabilidades del sistema.
+    \item Diseñar la base de datos para consolidar y gestionar el conjunto de información enfocado en el entrenamiento predictivo, lo que comprende el levantamiento de requerimientos de información necesarios para 
+    alimentar el modelo predictivo, identificando las fuentes de datos disponibles (La página oficial del IPN).
+    \item Implementar técnicas de procesamiento de lenguaje natural para analizar respuestas a preguntas abiertas de un cuestionario del modelo STAR y extraer las aptitudes de los usuarios, para ello 
+    se aprovecha un modelo de lenguaje fundacional preentrenado, aplicando un proceso de ajuste fino.
+    \item Desarrollar un modelo clasificador para correlacionar las habilidades con las opciones de carreras universitarias del Instituto Politécnico Nacional en la Ciudad de México, partiendo 
+    de la definición del problema como una tarea de clasificación supervisada, donde las variables predictoras corresponden a los programas académicos.
+    \item Diseñar una plataforma web para capturar las respuestas de los usuarios y presentar las recomendaciones vocacionales, lo que abarca el diseño de la interfaz de usuario y experiencia de usuario (UI/UX)
+     de la plataforma mediante la cual los estudiantes de educación media superior interactuarán con el sistema.
+    \item Implementar flujos de integración y despliegue continuo para automatizar la gestión de la infraestructura operativa, estableciendo un flujo de integración y despliegue continuos (CI/CD) que automatice las 
+    etapas de construcción, pruebas y liberación del sistema desarrollado.
+\end{enumerate}
+
+\section{Justificación}
+%%%%%%%%%%%%%%%%%
+En México, las herramientas de orientación vocacional se limitan a una digitalización pasiva por un proceso secuencial como los instrumentos utilizados por el IPN mediante el portal de Dirección de Apoyos a Estudiantes.
+
+En la Ciudad de México, de acuerdo con la Secretaría de Educación Pública (SEP) [1], durante el ciclo escolar 2025-2026 se registró una matrícula de 1,106,478 alumnos de nivel superior. La tasa de abandono escolar en este 
+nivel fue de 2.2\%, lo que en términos absolutos representa a más de 24,000 alumnos que interrumpieron sus estudios superiores en la capital en un solo ciclo escolar, equivalente a que más de 120 estudiantes abandonen sus 
+estudios cada día hábil del calendario escolar. Se trata, además, de una tasa anual: si se mantuviera constante durante los 4 a 5 años que dura en promedio una licenciatura, el riesgo acumulado de que un estudiante no 
+concluya su carrera podría situarse entre 8.5\% y 10.5\%. Esta magnitud cobra especial relevancia si se considera que la Ciudad de México es la entidad con mayor absorción educativa del país (148.0\% en educación superior para 2025-2026), 
+es decir, recibe muchos más estudiantes de nuevo ingreso de los que ella misma gradúa en el nivel medio superior, producto de la migración estudiantil hacia sus instituciones. La deserción escolar responde a un conjunto de factores 
+económicos, familiares, sociales, académicos y, de manera particularmente relevante, vocacionales.
+
+Particularmente, la deserción vinculada con la falta de orientación vocacional adecuada o inexistente se relaciona con la elección deficiente de carrera y de institución educativa, un momento de decisión que el estudiante de educación 
+media superior enfrenta sin necesariamente contar con herramientas objetivas de autoconocimiento ni con información confiable sobre las opciones disponibles. En un estudio realizado con 157 alumnos de ingeniería industrial de la Universidad de Sonora [2],
+validaron mediante modelado de ecuaciones estructurales (SEM) y análisis factorial confirmatorio (AFC) un instrumento que identifica cuatro factores latentes costos económicos, infraestructura, imagen o prestigio de la institución y servicios además de un 
+componente emotivo/social, como determinantes estadísticamente válidos y confiables de la elección de carrera y universidad. En ese mismo estudio, la variable "ubicación de la universidad" tuvo que ser eliminada del modelo por no alcanzar el valor mínimo de 
+varianza extraída promedio (AVE), lo que evidencia que no cualquier factor intuitivamente relevante resulta psicométricamente sostenible, y subraya la necesidad de validar empíricamente los instrumentos de orientación vocacional en lugar de asumir sus dimensiones a priori.
+
+Esta falta de orientación deriva, en buena medida, del limitado acceso a tecnologías de información y de evaluaciones no objetivas de competencias.
+Sin embargo, el Programa Nacional de Educación Superior para 2026-2030 plantea fortalecer estos instrumentos e incorporar herramientas basadas en inteligencia artificial para el acompañamiento académico.
+
+En este contexto surge una oportunidad para desarrollar herramientas basadas en inteligencia artificial que permitan ayudar con la elección vocacional en alineación con la oferta académica del IPN.
+La utilidad práctica del proyecto radica en automatizar un proceso de evaluación vocacional que atiende directamente este vacío al recopilar información del estudiante mediante un cuestionario estructurado bajo el modelo STAR en un sitio web, extraer sus habilidades 
+mediante Procesamiento de Lenguaje Natural, y procesarlas con un modelo clasificador de aprendizaje automático supervisado que las contrasta contra el catálogo de perfiles de ingreso del Instituto Politécnico Nacional.
+
+Los beneficiarios directos son los jóvenes estudiantes de educación media superior de la Ciudad de México que se encuentran en la etapa de elegir una carrera universitaria, quienes reciben un apoyo objetivo y accesible en un momento identificado por múltiples estudios 
+como determinante para la permanencia en sus estudios posteriores, así como los aspirantes al nivel superior del IPN. De manera indirecta, se benefician las instituciones de educación superior al recibir estudiantes con una mayor correspondencia entre sus habilidades 
+y el perfil de la carrera elegida.
+
+\section{Límites y alcances}
+
+\textbf{Límites}
+
+\begin{itemize}
+    \item El sistema se dirige a los planteles del IPN ubicados en la Ciudad de México y opera de manera aislada, sin consultar bolsas de trabajo ni sistemas universitarios externos.
+    \item El conjunto de datos se restringe a perfiles de ingreso correspondientes a programas académicos del IPN.
+    \item El flujo del sistema exige que el estudiante indique previamente su área de interés; la clasificación se ejecuta posteriormente sobre dicha selección.
+    \item El emparejamiento vocacional se realiza exclusivamente con base en las habilidades del estudiante, recopiladas mediante un formulario estructurado bajo el modelo STAR, y no sustituye la orientación proporcionada por un profesional.
+\end{itemize}
+
+\medskip
+
+\textbf{Alcances}
+
+\begin{itemize}
+    \item Desplegar el sistema sobre una arquitectura escalable basada en microservicios, empaquetados y orquestados mediante Docker.
+    \item Extraer automáticamente las habilidades desde texto libre mediante modelos de Procesamiento de Lenguaje Natural (PLN).
+    \item Generar un conjunto final de tres opciones de carreras universitarias con mayor compatibilidad respecto al perfil del usuario.
+    \item Cuantificar y visualizar el porcentaje de afinidad entre las habilidades identificadas y las carreras recomendadas.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Estado del arte}
+
+Se ha realizado una búsqueda bibliográfica sobre información potencialmente útil para el desarrollo del proyecto de investigación, donde
+los resultados se resumen a continuación:
+
+\begin{itemize}
+    \item Nelson Marcelo Romero Aquino y Eustaquio Alcides Martínez Jara [11] desarrollaron una aplicación de redes neuronales artificiales 
+    para la orientación vocacional utilizando una red neuronal multicapa (MLP) entrenada mediante retropropagación del error y el algoritmo 
+    de optimización Levenberg-Marquardt. El estudio empleó como entradas los resultados de dos instrumentos psicométricos ampliamente 
+    utilizados: el Test de Aptitudes Diferenciales (DAT) y el Inventario de Intereses de Hereford. Los datos fueron recopilados mediante una 
+    plataforma web y posteriormente divididos en conjuntos de entrenamiento (60\%) y prueba (40\%). La salida del modelo consistió en cuatro 
+    áreas vocacionales representadas mediante variables binarias: Física-Matemática, Químico-Biológica, Ciencias Sociales y Humanidades-Artes. 
+    Los autores evaluaron el desempeño mediante curvas ROC y compararon las recomendaciones generadas por el sistema contra las emitidas por 
+    un orientador profesional, obteniendo una coincidencia máxima del 80.6\% cuando se utilizó únicamente el DAT como entrada.
+    \item Omar Zahour, El Habib Benlahmar, Ahmed Eddaouim y Oumaima Hourrane [13] realizaron un estudio comparativo de métodos de aprendizaje 
+    automático para la clasificación automática de preguntas relacionadas con orientación académica y vocacional. La investigación comparó cuatro 
+    algoritmos de clasificación multiclase: Decision Forest, Decision Jungle, Regresión Logística y Redes Neuronales, implementados en 
+    Azure Machine Learning Studio. Como conjunto de datos utilizaron "E-Orientation Data", construido a partir del modelo RIASEC de Holland y 
+    compuesto por preguntas agrupadas en las categorías de actividad, ocupaciones, habilidades y personalidad. Tras un proceso de preprocesamiento 
+    y conversión de texto a características numéricas mediante feature hashing, los autores evaluaron los modelos empleando precisión, recall, 
+    F1-score y matrices de confusión. Los resultados mostraron que la red neuronal multiclase alcanzó el mejor desempeño entre los algoritmos analizados, 
+    evidenciando el potencial de las técnicas de aprendizaje automático para automatizar procesos de orientación vocacional.
+\end{itemize}
+
+Ambos trabajos demuestran la viabilidad del uso de técnicas de inteligencia artificial en procesos de orientación vocacional. Mientras que el primero 
+se enfoca en la recomendación de áreas de estudio a partir de pruebas psicométricas estructuradas, el segundo explora la clasificación automática de 
+información vocacional mediante algoritmos de aprendizaje automático. Estas investigaciones sirven como antecedente para el desarrollo de sistemas de 
+orientación más personalizados y adaptativos basados en inteligencia artificial.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Marco teórico}
+\subsection*{1. Técnicas computacionales}
+
+\begin{itemize}[leftmargin=*]
+
+    \item \textbf{Procesamiento de Lenguaje Natural (PLN)}
+    \begin{itemize}
+        \item El Procesamiento de Lenguaje Natural es una disciplina de la Inteligencia Artificial orientada a la interacción entre las computadoras y el lenguaje humano. 
+        Funciona mediante algoritmos que ingieren texto no estructurado y lo procesan a través de capas secuenciales: \textit{tokenización} (fragmentación del texto en unidades 
+        mínimas con significado lógico), \textit{análisis morfológico y sintáctico} (comprensión gramatical y relaciones de dependencia), y \textit{análisis semántico} (extracción del significado contextual). 
+        Al utilizar modelos de lenguaje fundacionales y metodologías avanzadas, el sistema transforma el texto crudo extraído de las respuestas abiertas del método STAR en incrustaciones vectoriales (\textit{embeddings}), 
+        representaciones matemáticas en espacios de alta dimensionalidad que permiten calcular la similitud semántica y la densidad conceptual del discurso.
+    \end{itemize}
+
+    \item \textbf{Generación Aumentada por Recuperación (RAG - Retrieval-Augmented Generation)}
+    \begin{itemize}
+        \item RAG es un paradigma de diseño arquitectónico para sistemas de inteligencia artificial generativa. En su funcionamiento base, aborda la principal limitación 
+        de los grandes modelos de lenguaje (alucinaciones o falta de información específica del dominio). El mecanismo se divide en dos fases concurrentes: la 
+        recuperación (\textit{Retrieval}) y la generación (\textit{Generation}). Cuando un usuario ingresa una solicitud, el sistema primero convierte esa entrada en un 
+        vector semántico y consulta una base de datos vectorial externa (en este caso, un catálogo estandarizado de habilidades del IPN). Mediante el cálculo de 
+        distancias (ej. similitud del coseno), recupera los fragmentos de conocimiento más relevantes y verificables. Posteriormente, estos fragmentos extraídos son 
+        concatenados a la indicación original del usuario (prompt), dotando al modelo generativo de un contexto paramétrico determinista sobre el cual inferir la respuesta final.
+    \end{itemize}
+
+    \item \textbf{Random Forest (Clasificador de Bosques Aleatorios)}
+    \begin{itemize}
+        \item Random Forest es un algoritmo de aprendizaje automático supervisado basado en el concepto del aprendizaje por conjuntos (\textit{ensemble learning}). 
+        Funciona generando una gran multiplicidad de árboles de decisión independientes (el ``bosque'') durante la fase de entrenamiento. Para garantizar la decorrelación 
+        entre los árboles y evitar el sobreajuste (\textit{overfitting}), emplea la técnica de \textit{Bagging} (\textit{Bootstrap Aggregating}), que entrena cada árbol 
+        en una submuestra aleatoria del conjunto de datos original, y además selecciona un subconjunto aleatorio de variables predictoras en cada nodo de división. En la 
+        fase de inferencia (clasificación), cada árbol individual emite un voto o predicción sobre la clase (en este caso, la carrera recomendada); el algoritmo de Random 
+        Forest consolida la salida final a través de un mecanismo de voto mayoritario (\textit{majority voting}) o promediado probabilístico, reduciendo significativamente 
+        la varianza de la predicción y aumentando la robustez y capacidad de generalización frente a nuevos datos.
+    \end{itemize}
+
+     \item \textbf{JEV (Joint Evaluation of Variables / Clasificadores Conjuntos)}
+    \begin{itemize}
+        \item Las aproximaciones de evaluación conjunta o arquitecturas de redes y algoritmos JEV se refieren a técnicas computacionales avanzadas en Machine Learning donde 
+        la extracción de inferencias se basa en la distribución condicional de múltiples variables estructuradas. Funciona modelando conjuntamente las interdependencias 
+        cruzadas entre un gran número de características de entrada, considerando no solo el efecto aislado de una variable sobre el objetivo predictivo, sino las 
+        covarianzas e interacciones complejas en una matriz multidimensional. Esto es crítico cuando el rendimiento en la clasificación de datos heterogéneos requiere 
+        mapear relaciones ocultas, garantizando un aumento en la precisión en espacios probabilísticos complejos antes de emitir una predicción jerárquica.
+    \end{itemize}
+\end{itemize}
+
+\subsection*{2. Lenguajes de Programación}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Python}
+    \begin{itemize}
+        \item Python es un lenguaje de programación de alto nivel, de propósito general, multiparadigma (soporta orientación a objetos, imperativa y funcional), 
+        interpretado y fuertemente tipado en tiempo de ejecución. Su núcleo de ejecución funciona compilando el código fuente a \textit{bytecode} (archivos .pyc), 
+        que luego es interpretado mediante la Máquina Virtual de Python (PVM). Esta abstracción del hardware permite ejecutar el mismo código de manera nativa 
+        sobre diferentes sistemas operativos sin necesidad de recompilación. Por su diseño enfocado en la legibilidad y la gestión automática de la memoria mediante 
+        conteo de referencias (\textit{reference counting}) y un recolector de basura generacional (\textit{garbage collector}), resulta computacionalmente ideal 
+        para el procesamiento iterativo masivo requerido por la ciencia de datos, el cálculo de tensores y la construcción de \textit{pipelines} de redes neuronales.
+    \end{itemize}
+
+    \item \textbf{TypeScript}
+    \begin{itemize}
+        \item TypeScript es un superconjunto sintáctico estricto de JavaScript, diseñado y soportado por Microsoft, orientado a la escalabilidad de aplicaciones 
+        empresariales. Funciona inyectando un sistema de tipado estático, clases e interfaces orientadas a objetos sobre el comportamiento asíncrono y flexible de 
+        JavaScript. Debido a que los navegadores web modernos no interpretan TypeScript de manera nativa, su núcleo funcional depende de un proceso de transpilación 
+        (traducción de código a código); el compilador (\textit{tsc}) analiza la estructura del código, detecta errores de tipado o de concurrencia en la fase de 
+        desarrollo estático (\textit{compile-time}) e inmediatamente lo transforma (\textit{emit}) en JavaScript puro y altamente optimizado. Esto asegura una 
+        integración de API, microservicios y estados robusta antes de que el código llegue al cliente final (el navegador web).
+    \end{itemize}
+
+    \item \textbf{JavaScript (JS)}
+    \begin{itemize}
+        \item JavaScript es un lenguaje de programación de alto nivel, interpretado (a través de motores como V8 o SpiderMonkey mediante compilación Just-In-Time o JIT) 
+        y basado en prototipos. Es el núcleo lógico subyacente que opera del lado del cliente para construir la dinámica web. Funciona empleando un modelo asíncrono de 
+        un solo hilo (\textit{single-threaded}) administrado mediante un bucle de eventos (\textit{event loop}). Este motor monitorea permanentemente la pila de llamadas 
+        (\textit{call stack}) y las colas de mensajes (colas de \textit{callbacks} o microtareas), inyectando el código para su ejecución secuencial y permitiendo manejar 
+        interacciones de usuario de manera fluida, consumos masivos de datos HTTP asíncronos (\textit{AJAX/Fetch}) y manipulaciones nativas sobre el Modelo de Objetos del 
+        Documento (DOM) sin saturar el procesamiento concurrente.
+    \end{itemize}
+\end{itemize}
+
+\subsection*{3. Frameworks y Bibliotecas}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Scikit-learn (Sklearn)}
+    \begin{itemize}
+        \item Scikit-learn es la biblioteca preeminente del ecosistema científico de Python para el despliegue de modelos de aprendizaje automático. Su arquitectura está 
+        cimentada nativamente en la infraestructura matemática provista por las bibliotecas NumPy y SciPy (para la vectorización masiva y aceleración mediante extensiones 
+        Cython o C subyacente). Funciona abstrayendo operaciones de álgebra lineal y métodos heurísticos de alto costo computacional en una API programática modular, 
+        coherente y unificada, proveyendo un paradigma estandarizado de objetos a través de \textit{Estimadores} (\textit{Estimators}) para ajustar los datos mediante 
+        funciones matemáticas de pérdida, \textit{Transformadores} (\textit{Transformers}) para reescalado, normalización o manipulación de dimensionalidad de las 
+        matrices y \textit{Predictores} (\textit{Predictors}) para la evaluación estocástica. Esta abstracción permite escalar prototipos desde árboles simples hasta 
+        clasificadores estadísticos masivos como \textit{Random Forest}.
+    \end{itemize}
+
+    \item \textbf{Pandas}
+    \begin{itemize}
+        \item Pandas es una biblioteca de software de código abierto diseñada explícitamente para el modelado, preparación y análisis semántico y estructural de datos en 
+        Python. Opera construyendo una infraestructura matricial heterogénea, utilizando dos arquitecturas primarias de objetos persistentes en la memoria RAM: 
+        las \textit{Series} (matrices unidimensionales equipadas con etiquetas de índices analíticos) y los \textit{DataFrames} (tablas u hojas de datos bidimensionales 
+        tabulares). Su funcionamiento crítico descansa sobre arreglos ndarray de NumPy encapsulados, logrando transformaciones relacionales en alta concurrencia, gestión 
+        implícita de datos nulos o faltantes (NaN), agrupaciones de cardinalidad y uniones computacionales que de otra forma tomarían miles de ciclos en lenguajes nativos
+         interpretados; todo manipulado a través de lógica relacional vectorial similar al lenguaje de consulta SQL.
+    \end{itemize}
+
+    \item \textbf{NumPy (Numerical Python)}
+    \begin{itemize}
+        \item NumPy es la biblioteca modular fundamental para el cómputo matricial avanzado, el álgebra tensorial, la estadística y la algoritmia científica en Python. 
+        Su arquitectura central orbita alrededor de la definición de \textit{ndarray} (arreglos n-dimensionales), estructuras de datos isotópicas fuertemente tipadas y 
+        residentes de forma contigua en el \textit{heap} de la memoria del procesador (a diferencia de las estructuras fragmentadas de listas en Python estándar). Su 
+        operación computacional principal se llama ``vectorización'': cuando se solicita una transformación matemática (\textit{broadcasting}), el objeto en vez de 
+        iterar registro a registro a través de lentos contadores locales en \textit{bytecode}, delega el cálculo a subrutinas optimizadas y altamente paralelizables 
+        escritas y compiladas puramente en los lenguajes C y Fortran de bajo nivel, maximizando los registros de punto flotante de la CPU y reduciendo drásticamente 
+        la latencia.
+    \end{itemize}
+
+    \item \textbf{Vue.js y Nuxt}
+    \begin{itemize}
+        \item \textbf{Vue.js:} Vue.js es un \textit{framework} progresivo y componente-reactivo de JavaScript diseñado fundamentalmente para la elaboración interactiva de 
+        interfaces de usuario y aplicaciones \textit{Single Page Applications} (SPA). Su motor operativo principal depende de un concepto conocido como "DOM Virtual" 
+        (\textit{Virtual Document Object Model}). Al invocar alteraciones en el estado de una aplicación interactiva, en lugar de modificar los lentos árboles nodales 
+        en el navegador nativo, Vue calcula iterativamente una aproximación en una estructura algorítmica clonada de JavaScript puramente computacional; si un elemento 
+        varía, se aplica un algoritmo heurístico comparativo (``\textit{diffing}'') y el \textit{framework} encola una instrucción para que el motor renderice físicamente 
+        solo el pixel diferencial, garantizando fluidez visual óptima con mínima reestructuración computacional por \textit{frames}.
+        \item \textbf{Nuxt:} Nuxt es el meta-framework de alto rendimiento basado sobre el ecosistema Vue.js que actúa como el compilador primario de arquitectura del 
+        servidor para la misma base de código. Funciona gestionando internamente la fase de renderizado y el empaquetamiento Webpack o Vite para Vue, soportando 
+        características nativas como el renderizado del lado del servidor (\textit{Server-Side Rendering, SSR}), o la compilación estática 
+        (\textit{Static Site Generation, SSG}). Al pre-renderizar las vistas virtualizadas o de servidor, inyecta las variables de optimización 
+        (SEO, metaetiquetas) e hidrata la página interactiva asíncronamente en el lado del cliente garantizando velocidad de red de latencia mínima para indexación o 
+        enrutamiento de interfaces.
+    \end{itemize}
+
+    \item \textbf{FastAPI}
+    \begin{itemize}
+        \item FastAPI es un \textit{framework} web de microservicios de alto desempeño diseñado para la construcción rápida de interfaces de programación de aplicaciones 
+        RESTful (APIs) en Python. Su rendimiento superlativo se deriva de su soporte nativo e intensivo a la concurrencia asíncrona moderna de Python a través de la 
+        interfaz ASGI (\textit{Asynchronous Server Gateway Interface}) impulsada por arquitecturas como \textit{Uvicorn}. Emplea exhaustivamente declaraciones semánticas 
+        tipadas. Funciona analizando estas descripciones de tipo para inyectar validaciones, deserialización binaria automática y un mecanismo de enrutado concurrente 
+        eficiente. Durante una consulta de red masiva, los procesos IO (red, llamadas a la base de datos) no bloquean el procesador y ceden la CPU inmediatamente a otros 
+        microservicios activos minimizando así la carga de hilos activos de manera matemática garantizando velocidades de consulta comparables o superiores a ecosistemas NodeJS o GoLang.
+    \end{itemize}
+
+    \item \textbf{Pydantic}
+    \begin{itemize}
+        \item Pydantic no es un servicio web, sino una rigurosa librería arquitectónica de análisis y verificación predictiva de tipos estáticos, mutación lógica de 
+        modelos y validación paramétrica de variables en el entorno de desarrollo y ejecución en Python. Se integra directamente en la arquitectura inyectora de 
+        dependencias de \textit{FastAPI}. Funciona extrayendo los tipos declarados en la lógica del negocio mediante las sugerencias de tipeo de Python 
+        (\textit{type hints}) en compilación. En el flujo IO masivo, convierte o castiga los objetos sin formato que llegan, por ejemplo a través de protocolos JSON, e 
+        instancia clases inmutables estructuradas estrictamente. Si el ecosistema espera un dato flotante u objeto y arriba una variable corrupta o de otro tipo, 
+        interrumpe el ciclo de compilación asíncrono o la transacción emitiendo excepciones rastreables.
+    \end{itemize}
+\end{itemize}
+
+\subsection*{4. Protocolos, Formatos y Tecnologías Web / Datos}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{HTML y CSS}
+    \begin{itemize}
+        \item \textbf{HTML:} El Lenguaje de Marcado de Hipertexto (HTML) constituye la ontología estructural de la World Wide Web. Es un estándar de marcado descriptivo. 
+        Funciona delineando y jerarquizando las directrices de la información a través de una ontología basada en pares de etiquetas en formato de nodos o árboles (DOM) 
+        leídas semánticamente y compiladas por el renderizador físico local del navegador cliente (\textit{engine}), determinando si un fragmento en crudo será procesado 
+        como entidad referencial textual, un marco de interacción interactivo, metadatos, objetos inyectados o contenido hipervinculado en tiempo de carga, dictando la 
+        semántica cruda del lienzo inicial de forma inerte pero procesable para lectores.
+        \item \textbf{CSS:} Las Hojas de Estilo en Cascada (CSS) son una notación descriptiva empleada como complemento de estructuración visual o presentación del 
+        documento hipertexto DOM. Funciona separando la semántica cruda de la inferencia matemática visual. CSS se apoya de selectores nodales o selectores booleanos 
+        lógicos, para inyectar parámetros vectoriales de reglas gráficas: desde geometrías estructurales en cajas de dimensiones computadas (\textit{Box-Model, Flexbox, 
+        Grids}), transiciones del estado lógico condicionado (pseudo-clases de actividad), colorimetría, o alteraciones referenciadas al dispositivo de visualización y 
+        densidad de píxeles mediante algoritmos dinámicos de encuadre en consultas multimedia (\textit{Media Queries}). Es traducido simultáneamente en capas del GPU 
+        físico del hardware del ordenador por los motores del cliente.
+    \end{itemize}
+
+    \item \textbf{Archivos Jupyter Notebook (.ipynb)}
+    \begin{itemize}
+        \item El formato Jupyter Notebook (cuya extensión canónica \textit{JSON Document Notebook} es .ipynb) no es per se una aplicación sino un ecosistema 
+        documental matemático altamente serializable e iterativo para entornos científicos de ejecución interactiva. Funciona codificando un protocolo y paradigma 
+        estructural basado en el estándar JSON (texto en bruto). Estos archivos contienen arrays algorítmicos que subdividen y fragmentan una sesión lógica iterativa 
+        de ejecución en unidades lógicas llamadas ``\textit{Celdas}'', divididas en Celdas de Marcado tipográfico matemático interactivo o Celdas Crudas de Ejecución 
+        Lógica. Un Kernel residente en segundo plano ejecuta las variables por persistencia estado mientras inyecta el Output referencial en binario o vectores dentro 
+        de los nodos JSON resultantes en la interfaz de la web, empaquetando algoritmos de procesamiento y explicaciones human-legibles como un repositorio.
+    \end{itemize}
+
+    \item \textbf{Bases de Datos Relacionales y Extensión Vectorial}
+    \begin{itemize}
+        \item \textbf{PostgreSQL:} PostgreSQL es un ecosistema RDBMS de base de datos relacional y administrador de persistencia de información centrado en el 
+        almacenamiento masivo concurrente transaccional. Funciona mapeando tablas multidimensionales o esquemas rígidos sobre hardware primario, garantizando un manejo 
+        asíncrono atómico, consistente, aislado y duradero (\textit{principios transaccionales ACID}) en paralelo. En cada solicitud empleando el administrador en modelo 
+        cliente-servidor el motor ejecuta inferencia de consulta (SQL), calcula estrategias optimizadas mediante el árbol referencial \textit{Query Planner} empleando 
+        estimaciones estadísticas algorítmicas, recuperando índices logarítmicos desde B-Trees y despachando las variables filtradas, todo gobernado por el método 
+        concurrente sin bloqueo (\textit{MVCC}), eludiendo bloqueos entre procesos iterativos complejos de lectura-escritura paralela intensiva y garantizando 
+        escalabilidad de grado industrial y la estandarización.
+        \item \textbf{pgvector:} Pgvector funge como una subrutina extensiva instalada físicamente sobre el \textit{kernel} de abstracción del servidor PostgreSQL para 
+        transformarlo intrínsecamente en un motor nativo y persistente de base de datos referencial o Vectorial. Funciona inyectando una abstracción topológica para 
+        indexación matemática a dimensiones enormes en coma flotante. En lugar de iterar consultas léxicas binarias, compila arreglos vectoriales continuos masivos 
+        provenientes de lenguajes o representaciones latentes, almacenados mediante una topología híbrida, para orquestar consultas a través de aproximaciones 
+        estocásticas al cálculo de la varianza en su vecindad (Ej: K-Vecinos más Cercanos \textit{KNN} y métodos \textit{HNSW}) empleando comparaciones masivas 
+        mediante el cálculo euclidiano, el producto vectorial interior (escalar) o el nivel de superposición cosenoidal angular (\textit{Similitud de coseno}) en 
+        espacio vectorial para recuperar el sentido o la respuesta.
+    \end{itemize}
+
+    \item \textbf{Caché y Orquestación Event-Driven (Redis)}
+    \begin{itemize}
+        \item Redis (\textit{Remote Dictionary Server}) es un motor atómico monohilo ultrarrápido persistente de bases de datos no relacionales especializado en latencia 
+        de microsegundos que reside exclusivamente dentro de las celdas de la memoria primaria (Memoria RAM). Al carecer nativamente de procesos vinculados con los 
+        latentes cabezales magnéticos o latencia flash NAND de Discos SSD durante su ejecución rutinaria, ejecuta consultas y asignaciones estructurales en tiempo real 
+        basado en paradigmas abstractos Clave-Valor. En arquitecturas modernas se utiliza fundamentalmente como mediador algorítmico y mecanismo de enrutamiento 
+        estocástico, gestionando topologías complejas (\textit{Event-Driven}), publicando y suscribiéndose (Pub/Sub) para comunicar de forma hiperconcurrente en 
+        milisegundos las matrices e información volátil (colas lógicas o tareas en paralelo en espera en el nodo) a múltiples \textit{microservicios} fragmentados 
+        aislados o API del ecosistema, distribuyendo asíncronamente las variables e instrucciones aisladas.
+    \end{itemize}
+
+    \item \textbf{Contenedores e Integración: Docker y GitHub Actions}
+    \begin{itemize}
+        \item \textbf{Docker:} Docker representa la abstracción primordial arquitectónica para el estándar de la contenedorización virtual paramétrica. Opera mediante 
+        subrutinas ancladas intrínsecamente en características primitivas y nativas del \textit{kernel} físico del sistema operativo subyacente (especialmente a través 
+        de rutinas como \textit{cgroups} para la limitación de la memoria/CPU del proceso aislado y \textit{namespaces} para segregar lógicamente su árbol físico de 
+        procesos atómicos, rutas binarias y la infraestructura de red en paralelo). Empleando esto, Docker despliega y compila una imagen estructural de forma 
+        encapsulada (\textit{Contenedor}). Un microservicio encapsulado de este ecosistema empaqueta estáticamente dentro del código el binario de Linux requerido, la 
+        librería explícita y todos los recursos variables aislando matemáticamente el ambiente asíncrono para que se compile binaria y uniformemente indiferente a si la 
+        red recae de fondo sobre un entorno físico portátil, infraestructura local nativa del servidor principal o se halla interconectado sobre la red global alojada 
+        por proveedores externos comerciales garantizando la integridad de cada fase.
+        \item \textbf{GitHub Actions:} Consiste fundamentalmente de un integrador o entorno arquitectónico dinámico de entrega y ejecución virtual para los procesos de 
+        CI/CD (Integración y Despliegue Continuo). Funciona mediante el paradigma arquitectónico Event-Driven al registrar eventos o "gatillos" en la rama virtual 
+        alojada y ejecutando subrutinas compuestas en rutinas YAML mediante su interfaz API. Al accionar un proceso iterativo en un binario o repositorio fuente en la 
+        web central, los servidores orquestadores clonan virtual y dinámicamente un ambiente alojado temporalmente de procesamiento paralelo donde 
+        ejecutan \textit{pipelines} automatizados estocásticos de inferencia de fallos y validación o compilación binaria. Solo una vez probada la matriz iterativa del 
+        proyecto de forma satisfactoria en base a la lógica impuesta en los test estáticos, se habilita asíncronamente un punto de carga transaccional que despliega los 
+        paquetes compilados a las redes y enjambres servidores (Ej. Google Cloud).
+    \end{itemize}
+
+    \item \textbf{Infraestructura en la Nube (Google Cloud)}
+    \begin{itemize}
+        \item Google Cloud Platform (GCP) constituye un vasto paradigma integral y capa hiperconcurrente de computación abstracta en la nube. A través de este, GCP 
+        orquesta la virtualización computacional estocástica (VM o Clústeres Kubernetes distribuidos en microservicios sobre la red transoceánica y multi-servidores 
+        regionales de Google). Funciona abstrayendo componentes lógicos como red SDN, escalabilidad matemática a través de balanceadores asíncronos y almacenamiento
+         masivo latente u operacional a través de nodos API y orquestación paramétrica global. La arquitectura de microservicios propuesta aprovecha sus componentes 
+         mediante nodos de redes virtualizadas que orquestan asíncronamente el aprovisionamiento instantáneo o terminación de contenedores dinámicos en base a métricas 
+         dinámicas de red asíncrona garantizando disponibilidad latente elástica en microsegundos y seguridad distribuida en bases de datos gestionadas de estado escalable 
+         y distribuido para ecosistemas corporativos.
+    \end{itemize}
+\end{itemize}
+
+\subsection*{5. Metodología vocacional}
+
+\begin{itemize}[leftmargin=*]
+        \item \textbf{Método STAR (Situación, Tarea, Acción, Resultado)}
+        \begin{itemize}
+            \item El método STAR no es un algoritmo computacional, sino un marco metodológico estructurado utilizado en la gestión de recursos humanos y la 
+            evaluación por competencias. Su funcionamiento radica en la extracción sistemática de evidencia conductual en entrevistas y evaluaciones psicológicas 
+            o vocacionales. Funciona forzando al individuo a narrar un evento dividiéndolo en cuatro fases analíticas: \textit{Situación} (contexto y restricciones 
+            del entorno), \textit{Tarea} (el objetivo o responsabilidad asignada frente al problema), \textit{Acción} (los pasos secuenciales, toma de decisiones y 
+            herramientas aplicadas directamente por el individuo) y \textit{Resultado} (las consecuencias cuantificables, el impacto y el aprendizaje adquirido). 
+            En el entorno del procesamiento de lenguaje natural (PLN), esta partición estructurada permite que los modelos extraigan características latentes y 
+            evalúen de manera estandarizada las habilidades blandas y técnicas del usuario, al convertir la narrativa cualitativa en parámetros observables.
+        \end{itemize}
+\end{itemize}
+%%%%%%fin del archivo
+\endinput 

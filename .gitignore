@@ -1,0 +1,33 @@
+# Salidas y archivos auxiliares de LaTeX
+build/
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.idx
+*.ilg
+*.ind
+*.lof
+*.log
+*.lot
+*.nav
+*.out
+*.run.xml
+*.snm
+*.synctex
+*.synctex.gz
+*.toc
+*.vrb
+*.xdv
+
+# PDF generado en la raíz
+/Principal.pdf
+
+# Archivos temporales de editores y sistemas operativos
+*.bak
+*.tmp
+*.swp
+Thumbs.db
+.DS_Store

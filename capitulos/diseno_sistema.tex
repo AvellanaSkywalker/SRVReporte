@@ -1,7 +1,15 @@
-\chapter{Diseño de sistema}
+\chapter{Diseño y desarrollo del sistema}
 Este capítulo presenta los requerimientos específicos de software que definen las funcionalidades y 
 restricciones. Con base a ello, se desarrolla el diseño conceptual, modular y detallado del sistema, 
 así como la definición de la arquitectura de datos, software y nube que sustenta su implementación.
+\section{Diseño conceptual}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{imagenes/dConceptual.png}
+\caption{Diseño conceptual del sistema}
+\label{fig:diseno-conceptual}
+\end{figure}
+
 \section{Requerimientos específicos de software}
 \textbf{Explicación de nomenclatura.}
 \begin{itemize}
@@ -201,13 +209,8 @@ La pantalla deberá mostrar un mensaje informativo sobre la coincidencia insufic
 
 
 
-\section{Diseño conceptual}
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{imagenes/dConceptual.png}
-\caption{Diseño conceptual del sistema}
-\label{fig:diseno-conceptual}
-\end{figure}
+
+
 
 \section{Diseño modular}
 \begin{figure}[H]
@@ -218,16 +221,37 @@ La pantalla deberá mostrar un mensaje informativo sobre la coincidencia insufic
 \end{figure}
 
 \section{Diseño detallado}
-\subsection{Arquitectura de base de datos}
+\subsection{Diagramas de flujo modulares}
+\subsection{Diagrama entidad-relación}
 \begin{figure}[H]
 \centering
 \includegraphics[height=0.81\textheight,keepaspectratio]{imagenes/athenaBD.png}
-\caption{Arquitectura de la base de datos Athena}
+\caption{Diagrama entidad-relación de la base de datos Athena}
 \label{fig:arquitectura-base-datos}
 \end{figure}
 
-\subsection{Diagramas de flujo modulares}
 \subsection{Arquitectura de software}
 \subsection{Arquitectura de nube}
+
+\section{Desarrollo de herramientas psicológicas}
+\subsection{Extracción de criterios con el modelo RIASEC}
+\subsection{Creación de formulario orientado al modelo RIASEC}
+
+\section{Extracción e inserción de datos}
+\subsection{Extracción de áreas, escuelas, carreras y habilidades}
+\subsection{Conjunto de entrenamiento de modelos}
+
+\section{Desarrollo de microservicios}
+\section{Desarrollo del sitio web}
+
+\section{Implementación de infraestructura}
+\subsection{Despliegue de servicios}
+\subsection{Configuración de redes}
+\subsection{Integración y despliegue continuo (CI/CD)}
+
+\section{Pruebas de desarrollo}
+\subsection{Pruebas de integración de módulos}
+\subsection{Pruebas unitarias}
+
 %%%%%%fin del archivo
 \endinput 

@@ -606,7 +606,7 @@
 \newcommand*\l@chapter[2]{%
   \ifnum \c@tocdepth >\m@ne
     \addpenalty{-\@highpenalty}%
-    \vskip 1.0em \@plus\p@
+    \vskip 0.5em \@plus\p@
     \setlength\@tempdima{1.5em}%
     \begingroup
       \parindent \z@ \rightskip \@pnumwidth

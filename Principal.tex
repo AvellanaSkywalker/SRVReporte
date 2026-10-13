@@ -7,6 +7,10 @@
 \usepackage{xltabular}
 \usepackage{enumitem}
 \usepackage{float}
+\usepackage{array}
+\definecolor{encabezadoTabla}{RGB}{108, 19, 43} % Guinda IPN / institucional
+\definecolor{filaAlterna}{RGB}{245, 247, 248}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 %%%%%%%%%%%%%  Datos de la Portada y acta
 \title{SISTEMA INTELIGENTE BASADO EN APRENDIZAJE AUTOMÁTICO PARA LA RECOMENDACIÓN VOCACIONAL DE CARRERAS DEL INSTITUTO POLITÉCNICO NACIONAL EN LA CIUDAD DE MÉXICO}
 \unidad{\Upiita}
@@ -64,7 +68,7 @@
   \vskip 10\p@}
 \renewcommand{\@dottedtocline}[5]{%
   \ifnum #1>\c@tocdepth\else
-    \vskip 1em \@plus\p@
+    \vskip 0.3em \@plus\p@
     {\setlength{\@tempdima}{#3}%
      \leftskip #2\relax
      \rightskip \@tocrmarg
@@ -117,7 +121,7 @@
 %%% modificar archivo capitulos/marco_metodologico.tex
 \MarcodeReferencia
 %%% modificar archivo capitulos/diseno_sistema.tex
-\include{capitulos/desarrollo_sistema}
+%\include{capitulos/desarrollo_sistema}
 %%% modificar archivo capitulos/desarrollo_sistema.tex
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  \final

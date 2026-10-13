@@ -1,10 +1,10 @@
-\chapter{Marco metodológico y gestión del proyecto}
+\chapter{Marco teórico}
 Este capítulo presenta la metodología utilizada para la gestión y desarrollo del proyecto. Se describen las prácticas de 
 planificación y seguimiento, la metodología de desarrollo de software adoptada y los instrumentos de recolección de datos 
 empleados para identificar las habilidades de los estudiantes. Estos elementos constituyen la base para el diseño, 
 implementación y evaluación de la solución propuesta.
 
-\section{Gestión del proyecto (Kanban)}
+\section{Marco metodológico}
 La organización del proyecto se apoyará principalmente en Kanban, ya que enfoque permite conocer el estado de cada tarea, 
 controlar el progreso del proyecto y optimizar la distribución del trabajo. Asimismo, se incorporan prácticas ágiles de 
 Scrum, con el propósito de promover un desarrollo ordenado e incremental.
@@ -56,25 +56,54 @@ entrega el 1 de noviembre.
 Con el propósito de asegurar el cumplimiento de los objetivos del proyecto, se realizarán verificaciones periódicas durante el 
 desarrollo.
 
-\section{Metodología de desarrollo de software (modelo en escalera)}
-La metodología de desarrollo de software se basará en el modelo en cascada, el cual organiza el proyecto en etapas secuenciales. 
-Para este proyecto se consideran las fases de requerimientos, diseño, implementación y pruebas, cada fase generará entregables que 
-servirán como entrada para la siguiente, permitiendo mantener la trazabilidad y el control del proceso de desarrollo. 
+\section{Marco tecnológico}
 
-\begin{itemize}
-    \item \textbf{Requerimientos:} Se establecerán las funciones, reglas, características de calidad, elementos de interfaz y condiciones de implementación que deberá cumplir el sistema. 
-    \item \textbf{Diseño:} Se describirán la arquitectura, los modelos de datos, los flujos de información, las interfaces y el procedimiento de procesamiento y clasificación.
-    \item \textbf{Implementación:} Se documentará la construcción de los componentes, la preparación de los datos, el desarrollo de los modelos y la integración y el despliegue de la plataforma.
-    \item \textbf{Pruebas:} Se presentarán los procedimientos de evaluación, las evidencias obtenidas, las correcciones realizadas y el análisis de los alcances y limitaciones del sistema.
-\end{itemize}
+\renewcommand{\arraystretch}{1.35}
+\setlength{\tabcolsep}{5pt}
+\begin{longtable}{ L{0.17\textwidth} L{0.33\textwidth} L{0.42\textwidth} }
+\caption{Tecnologías utilizadas en el desarrollo del proyecto} \label{tab:marco-tecnologico}\\
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Tecnología} & \color{white}\textbf{Descripción técnica} & \color{white}\textbf{Justificación y rol en el proyecto} \\
+\midrule
+\endfirsthead
+\multicolumn{3}{c}{
+\tablename\ \thetable: Tecnologías utilizadas en el desarrollo del proyecto \textit{(continuación)}
+}\\
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Tecnología} & \color{white}\textbf{Descripción técnica} & \color{white}\textbf{Justificación y rol en el proyecto} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{3}{r}{
+\textit{Continúa en la siguiente página}
+}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\textbf{PostgreSQL} & Sistema gestor de bases de datos relacional de código abierto, conocido por su fiabilidad, integridad de datos y extensibilidad. & Permite mantener la integridad de los datos. Además, su capacidad para manejar extensiones, como \texttt{pgvector}, lo hace adecuado para almacenar y consultar eficientemente bases de conocimiento. \\
+\rowcolor{filaAlterna}
+\textbf{Python} & Lenguaje de programación de propósito general. & Constituye el núcleo lógico del backend y facilita la conexión entre la lógica de negocio y los modelos de inteligencia artificial. Es una de las opciones mejor adaptadas para el desarrollo de soluciones de aprendizaje automático. \\
+\textbf{FastAPI} & Framework web moderno, rápido y de alto rendimiento para construir API con Python. & Su naturaleza asíncrona lo hace adecuado para el módulo de API. Permite gestionar eficientemente múltiples solicitudes concurrentes y coordinar las llamadas a los microservicios sin bloquear el sistema. \\
+\rowcolor{filaAlterna}
+\textbf{Jev} & Modelo de inteligencia artificial especializado en decisiones tipadas (\textit{System 1 Decision Model} de TypeSafe AI), que evalúa entradas de texto y devuelve clasificaciones estructuradas con probabilidades calibradas en milisegundos, en lugar de generar texto libre. & Se encarga del análisis de las respuestas abiertas del aspirante. Permite evaluar el texto libre para detectar competencias adicionales no seleccionadas en las preguntas cerradas y ponderar, mediante porcentajes de coincidencia, las habilidades del catálogo RIASEC. \\
+\textbf{Pydantic} & Biblioteca de Python orientada a la validación y serialización de datos, basada en anotaciones de tipos. & Permite validar estrictamente la estructura de los objetos JSON que circulan entre el sitio web, la API, el orquestador Redis y los microservicios. \\
+\rowcolor{filaAlterna}
+\textbf{Pandas y NumPy} & Bibliotecas fundamentales de Python para la manipulación estructurada de datos y el cálculo numérico de alto rendimiento. & Son indispensables para preprocesar, limpiar y transformar las respuestas antes de alimentar los modelos de clasificación predictiva. \\
+\textbf{Algoritmo Random Forest} & Algoritmo de aprendizaje automático supervisado basado en el ensamble de múltiples árboles de decisión mediante \textit{bagging}, reconocido por su precisión en problemas de clasificación multiclase y su resistencia al sobreajuste. & Constituye la base de los tres modelos clasificadores especializados por área de conocimiento del IPN: Ingeniería y Ciencias Físico-Matemáticas, Ciencias Médico-Biológicas y Ciencias Sociales y Administrativas. Su función consiste en correlacionar las habilidades ponderadas del aspirante con las carreras disponibles en la Ciudad de México. \\
+\rowcolor{filaAlterna}
+\textbf{Redis} & Estructura de almacenamiento de datos en memoria, utilizada comúnmente como base de datos y sistema de caché. & Actúa como orquestador del sistema. Mediante un formato de eventos JSON, Redis administra las colas de mensajes de manera asíncrona y asegura un flujo de datos desacoplado y de baja latencia. \\
+\textbf{HTML, CSS y JavaScript} & Tecnologías fundamentales de la web: HTML estructura el contenido, CSS define su presentación visual y JavaScript incorpora interactividad. & HTML proporciona la estructura semántica de los cuestionarios, CSS permite implementar un diseño responsivo para dispositivos móviles y equipos de escritorio, y JavaScript captura las respuestas e interactúa con la API. \\
+\rowcolor{filaAlterna}
+\textbf{Vue.js} & Framework progresivo de JavaScript utilizado para construir interfaces de usuario web. & Permite desarrollar interfaces interactivas y reactivas, con una curva de aprendizaje accesible. Se utiliza para proporcionar una experiencia fluida, rápida y moderna durante la resolución de los cuestionarios. \\
+\textbf{Nuxt.js} & Framework construido sobre Vue.js que incorpora capacidades como renderizado del lado del servidor (\textit{Server-Side Rendering}, SSR) y generación de sitios estáticos. & Optimiza el tiempo de carga del frontend, mejora la estructura de enrutamiento y permite que el portal sea indexable y escale eficientemente al comunicarse con la API. \\
+\rowcolor{filaAlterna}
+\textbf{GitHub} & Plataforma de desarrollo colaborativo y alojamiento de repositorios en la nube, basada en el sistema de control de versiones distribuido Git. & Centraliza el código fuente de los servicios modulares, los scripts de entrenamiento de los modelos y la plataforma web. Facilita el control de versiones, la gestión de ramas y la trazabilidad del desarrollo. \\
+\textbf{GitHub Actions} & Plataforma de integración y despliegue continuo (CI/CD) integrada en GitHub, que permite automatizar flujos de compilación, pruebas y entrega a partir de eventos generados en el repositorio. & Automatiza la ejecución de pruebas de software, el empaquetamiento de contenedores Docker y la actualización continua de los módulos y modelos clasificadores ante cada cambio integrado en el repositorio. \\
+\rowcolor{filaAlterna}
+\textbf{Docker} & Plataforma utilizada para empaquetar aplicaciones y sus dependencias en contenedores ligeros y portátiles. & Garantiza la estandarización del entorno. Al empaquetar cada microservicio, permite que funcione de manera consistente tanto durante el desarrollo como en el despliegue dentro de un clúster de Kubernetes. \\
+\textbf{Google Cloud} & Plataforma de computación en la nube que proporciona infraestructura escalable, ejecución administrada de contenedores, redes seguras y almacenamiento de alta disponibilidad. & Proporciona la infraestructura operativa donde se alojan y ejecutan los contenedores de los servicios modulares, la base de datos y la plataforma web. Esto permite mantener la escalabilidad y disponibilidad continua del sistema para los aspirantes. \\
+\end{longtable}
 
-\section{Instrumentos de recolección de datos (formularios de habilidades)}
-
-
-\subsection{Formulario Área 1: Ciencias Físico-Matemáticas e Ingenierías}
-
-\subsection{Formulario Área 2: Ciencias Biológicas, Químicas y de la Salud}
-
-\subsection{Formulario Área 3: Ciencias Sociales y Administrativas}
+\section{Comparativa tecnológica}
 
 \endinput

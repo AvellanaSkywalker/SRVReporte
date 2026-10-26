@@ -253,7 +253,7 @@
 \newcommand\inicial{%
 \setcounter{secnumdepth}{-1}}
 \newcommand\media{%
-\setcounter{secnumdepth}{4}}
+\setcounter{secnumdepth}{2}}
 \newcommand\mainmatter{%
     \cleardoublepage
   \@mainmattertrue
@@ -574,8 +574,8 @@
 \newcommand\@tocrmarg{2.55em}
 \newcommand\@dotsep{4.5}
 %\setcounter{tocdepth}{2}
-\setcounter{secnumdepth}{4}
-\setcounter{tocdepth}{4}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
 \newcommand\tableofcontents{%
     \if@twocolumn
       \@restonecoltrue\onecolumn

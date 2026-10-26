@@ -1,59 +1,55 @@
-\chapter{Diseño y desarrollo del sistema}
-Este capítulo presenta los requerimientos específicos de software que definen las funcionalidades y 
-restricciones. Con base a ello, se desarrolla el diseño conceptual, modular y detallado del sistema, 
-así como la definición de la arquitectura de datos, software y nube que sustenta su implementación.
+\chapter{Diseño del sistema}
+Este capítulo define qué debe hacer el sistema y cómo se estructura. Presenta el diseño conceptual, los requerimientos de software, el diseño modular y el diseño detallado: instrumento de captura, modelo de afinidad, flujos, contratos de comunicación, base de datos, arquitectura de software y arquitectura de nube. La construcción de estos elementos se describe en el capítulo siguiente.
+
 \section{Diseño conceptual}
+El aspirante responde un cuestionario en el sitio web. La API publica sus respuestas en un bus de eventos y los demás servicios las procesan en cadena: el extractor mide qué tan bien sus respuestas coinciden con los criterios de cada carrera, el clasificador estima la afinidad con cada carrera del área elegida y el constructor de respuesta entrega las tres carreras con mayor coincidencia junto con las escuelas donde se imparten (figura~\ref{fig:diseno-conceptual}).
+
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imagenes/dConceptual.png}
+\includegraphics[width=\textwidth,keepaspectratio]{imagenes/conceptual.png}
 \caption{Diseño conceptual del sistema}
 \label{fig:diseno-conceptual}
 \end{figure}
 
 \section{Requerimientos específicos de software}
-\textbf{Explicación de nomenclatura.}
-\begin{itemize}
-    \setlength{\itemsep}{0pt}
-    \setlength{\parskip}{0pt}
-    \setlength{\parsep}{0pt}
-    \setlength{\topsep}{0pt}
-    \item RF: Requisito funcional.
-    \item RNF: Requisito no funcional. 
-    \item RI: Requisito de interfaz.
-    \item RIM: Requisito de implementación.
+Los requerimientos se codifican de la siguiente forma:
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt,parsep=0pt]
+    \item \textbf{RF:} requisito funcional. \qquad \textbf{RNF:} requisito no funcional.
+    \item \textbf{RI:} requisito de interfaz. \qquad \textbf{RIM:} requisito de implementación.
 \end{itemize}
+Constituyen la línea base de diseño. Su grado de cumplimiento se evalúa en el capítulo de pruebas y resultados (tabla~\ref{tab:cumplimiento}).
 
 \begin{table}[H]
 \centering
 \small
-\renewcommand{\arraystretch}{1.2}
+\renewcommand{\arraystretch}{1.05}
 \caption{Requerimientos de implementación}
 \label{tab:req_imp}
 \begin{tabularx}{\textwidth}{%
-    >{\raggedright\arraybackslash}p{0.08\textwidth}
-    >{\raggedright\arraybackslash}p{0.08\textwidth}
-    >{\raggedright\arraybackslash}p{0.23\textwidth}
+    >{\centering\arraybackslash}p{0.07\textwidth}
+    >{\centering\arraybackslash}p{0.05\textwidth}
+    >{\raggedright\arraybackslash}p{0.28\textwidth}
     >{\raggedright\arraybackslash}X
 }
 \toprule
 \textbf{Tipo} & \textbf{ID} & \textbf{Título} & \textbf{Descripción} \\
 \midrule
 RIM & A & Arquitectura de software &
-La implementación de todos los módulos debe seguir una arquitectura basada en microservicios con un patrón de diseño orientado a eventos. \\
+Los módulos deben implementarse como microservicios con un patrón orientado a eventos. \\
 RIM & B & Acceso a código &
-El código debe subirse a GitHub con una estructura monorepositorio que separe el frontend, la base de datos y el backend. \\
+El código debe alojarse en GitHub en un monorrepositorio que separe frontend, base de datos y backend. \\
 RIM & C & Tecnologías de frontend &
-La plataforma web debe construirse con Vue.js y Nuxt para la comunicación con el backend, utilizando módulos de TypeScript. \\
+La plataforma web debe construirse con Vue.js, Nuxt y TypeScript. \\
 RIM & D & Tecnologías de base de datos &
-La base de datos debe construirse con PostgreSQL y pgvector, respetando el diseño de arquitectura entidad-relación. \\
+La base de datos debe construirse en PostgreSQL y respetar el diagrama entidad-relación del diseño. \\
 RIM & E & Tecnología de orquestación &
 La orquestación de eventos debe construirse con Redis. \\
-RIM & F & Tecnología de backend y API REST &
-La API debe construirse con FastAPI y Python, mientras que los microservicios deben utilizar modelos Pydantic e implementarse con Python. \\
+RIM & F & Backend y API REST &
+La API debe construirse con FastAPI y Python. Los microservicios deben usar modelos Pydantic. \\
 RIM & G & Integración CI/CD &
-La integración y el despliegue continuos deben implementarse mediante GitHub Actions. \\
+La integración y el despliegue continuos deben implementarse con GitHub Actions. \\
 RIM & H & Tecnologías de nube &
-El despliegue del servicio debe realizarse mediante la plataforma Google Cloud. \\
+El despliegue debe realizarse en Google Cloud. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -74,10 +70,10 @@ El despliegue del servicio debe realizarse mediante la plataforma Google Cloud. 
 \textbf{Tipo} & \textbf{ID} & \textbf{Título} & \textbf{Descripción} \\
 \midrule
 RI & I & Tipografía principal &
-Se establece IBM Plex Sans como la única familia tipográfica sans-serif para toda la interfaz. \\
-RI & J & Jerarquía tipográfica y tamaños &
+Se establece IBM Plex Sans como única familia sans-serif de la interfaz. \\
+RI & J & Jerarquía tipográfica &
 \begin{itemize}[leftmargin=*,nosep]
-    \item Cuerpo base de texto: 18 px.
+    \item Cuerpo de texto: 18 px.
     \item Títulos principales (H1): 32 px.
     \item Títulos secundarios (H2): 24 px.
     \item Texto secundario y metadatos: 16 px.
@@ -85,8 +81,8 @@ RI & J & Jerarquía tipográfica y tamaños &
 RI & K & Interlineado y espaciado &
 \begin{itemize}[leftmargin=*,nosep]
     \item Interlineado general: 1.5.
-    \item Interlineado para campos abiertos: 1.6.
-    \item Espaciado para títulos: 0.01 em.
+    \item Interlineado en campos abiertos: 1.6.
+    \item Espaciado de títulos: 0.01 em.
     \item Margen inferior de bloques: 1.25 rem.
 \end{itemize} \\
 RI & L & Paleta de colores &
@@ -96,16 +92,16 @@ RI & L & Paleta de colores &
     \item Elementos interactivos: \#53C9AF.
     \item Mensajes de error: \#DB3539.
 \end{itemize} \\
-RI & M & Arquitectura de navegación &
-La navegación debe presentar una estructura secuencial fragmentada en pantallas. \\
+RI & M & Navegación &
+La navegación debe ser secuencial, dividida en pantallas. \\
 RI & N & Indicador de progreso &
-La interfaz debe mostrar un indicador minimalista que marque el avance actual. \\
-RI & O & Microinteracciones y animaciones &
-Las transiciones de pantalla y animaciones de botones deben reducirse al mínimo. \\
-RI & P & Estilo de UI/UX &
-La plataforma deberá utilizar un estilo denominado glassmorfismo. \\
+La interfaz debe mostrar un indicador de avance minimalista. \\
+RI & O & Animaciones &
+Las transiciones y animaciones deben reducirse al mínimo. \\
+RI & P & Estilo visual &
+La plataforma debe usar un estilo glassmorfista. \\
 RI & Q & Representación de métricas &
-Los resultados deberán visualizarse mediante gráficos y una explicación textual de los datos de coincidencia. \\
+Los resultados deben mostrarse con gráficos y una explicación textual de la coincidencia. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -135,123 +131,235 @@ Los resultados deberán visualizarse mediante gráficos y una explicación textu
 \bottomrule
 \endlastfoot
 
-RF & 1 & Información en pantalla de inicio &
-La plataforma deberá presentar información introductoria sobre el sistema, su objetivo, su funcionamiento y la forma adecuada de responder el cuestionario. El botón ``Comenzar'' deberá dirigir a la pantalla de recopilación de datos personales. \\
+RF & 1 & Pantalla de inicio &
+La plataforma debe explicar el objetivo del sistema, su funcionamiento y cómo responder el cuestionario. El botón ``Comenzar'' lleva a la captura de datos personales. \\
 
-RI & 1.1 & Pantalla de inicio &
-La pantalla deberá incluir la frase ``Descubre tu camino profesional'', un texto introductorio, una explicación del funcionamiento y un botón ``COMENZAR'', en un orden claro y centrado. \\
+RF & 2 & Datos personales &
+La plataforma debe capturar nombre, correo electrónico y edad, y solicitar la aceptación de los términos. \\
 
-RF & 2 & Cuestionario de información personal &
-La plataforma deberá mostrar campos para capturar el nombre y el correo electrónico, además de un botón ``Siguiente''. \\
+RNF & 2.1 & Campo de nombre &
+El nombre debe admitir solo caracteres alfabéticos, con longitud de 3 a 60 caracteres. \\
 
-RNF & 2.1 & Restricciones del campo de nombre &
-El campo ``Nombre'' deberá admitir únicamente caracteres alfabéticos y una longitud de 3 a 60 caracteres. \\
-
-RNF & 2.2 & Restricciones del campo de correo electrónico &
-El campo deberá aceptar únicamente direcciones con formato válido, compuesto por usuario, símbolo ``@'' y dominio. \\
+RNF & 2.2 & Campo de correo &
+El correo debe tener formato válido: usuario, símbolo ``@'' y dominio. \\
 
 RNF & 2.3 & Uso de datos personales &
-Los datos recopilados se utilizarán exclusivamente con fines estadísticos. Proporcionarlos no constituirá un registro ni creará una cuenta. \\
+Los datos se usan solo con fines estadísticos. Capturarlos no crea una cuenta. \\
 
 RF & 2.4 & Términos y condiciones &
-La plataforma deberá mostrar una casilla de aceptación, desmarcada por defecto, y un enlace para consultar los términos. La aceptación será obligatoria para continuar. \\
+La casilla de aceptación debe iniciar desmarcada y ser obligatoria para continuar. \\
 
-RI & 2.5 & Pantalla de cuestionario de información personal &
-La pantalla deberá mostrar los campos de nombre y correo electrónico, el aviso sobre el uso de datos, el acceso a los términos, la casilla de aceptación y el botón ``Siguiente''. Los elementos deberán ser legibles, ordenados y adaptables. \\
+RF & 3 & Selección de área &
+El aspirante debe elegir una sola área de conocimiento: Ingeniería y Ciencias Físico-Matemáticas, Ciencias Médico-Biológicas o Ciencias Sociales y Administrativas. \\
 
-RF & 3 & Cuestionario de selección de área &
-La plataforma deberá permitir seleccionar una sola área de conocimiento y mostrar el cuestionario correspondiente. \\
+RF & 4 & Valoración de objetivos &
+La plataforma debe presentar, por cada carrera del área elegida, una pregunta derivada de su objetivo formativo. El aspirante la califica de 1 a 5 y puede justificar su respuesta en texto libre. \\
 
-RNF & 3.1 & Selección de área &
-La selección deberá limitarse a Ingeniería y Ciencias Físico-Matemáticas, Ciencias Médico-Biológicas o Ciencias Sociales y Administrativas. No se permitirán áreas manuales o distintas. \\
+RNF & 4.1 & Justificación de la calificación máxima &
+Una calificación de 5 debe acompañarse de una justificación en texto libre. \\
 
-RI & 3.2 & Pantalla de selección de área &
-La pantalla deberá presentar el título ``Selecciona tu área de conocimiento'', el texto de apoyo y tres tarjetas uniformes con indicador de selección, ícono y nombre del área. \\
+RF & 5 & Cuestionario RIASEC &
+La plataforma debe presentar una pregunta por dimensión RIASEC del área. Cada pregunta ofrece habilidades para seleccionar, tomadas de los perfiles de las carreras, y una pregunta abierta. \\
 
-RF & 4 & Cuestionario de selección de habilidades &
-La plataforma deberá mostrar la pregunta sobre las fortalezas de la persona usuaria, permitir múltiples selecciones y avanzar mediante el botón ``Siguiente''. \\
-
-RNF & 4.1 & Catálogo de habilidades &
-El catálogo deberá integrar las habilidades de los perfiles de ingreso de las carreras del IPN y mostrar únicamente las correspondientes al área seleccionada. \\
-
-RNF & 4.2 & Selección de habilidades &
-La persona usuaria deberá seleccionar al menos una habilidad para continuar. \\
-
-RI & 4.3 & Pantalla de selección de habilidades &
-La pantalla deberá mostrar la pregunta, una lista vertical de habilidades con casillas de selección y un botón ``Siguiente'', manteniendo contraste y legibilidad. \\
-
-RF & 5 & Cuestionario STAR &
-La plataforma deberá presentar cuatro situaciones para identificar habilidades a partir de experiencias previas. Cada respuesta deberá organizarse en situación, tarea, acción y resultado. \\
-
-RNF & 5.1 & Restricciones de entradas de texto en cuestionario STAR &
-Las respuestas deberán ser claras, detalladas y relacionadas con la pregunta. Las respuestas insuficientes deberán notificarse sin interpretarlas como ausencia de habilidades. \\
-
-RI & 5.2 & Pantallas de cuestionarios STAR &
-Las preguntas deberán mostrarse con tipografía legible y cuadros de texto de varias líneas, manteniendo un estilo uniforme. \\
+RNF & 5.1 & Selección de habilidades &
+En cada dimensión debe seleccionarse al menos una habilidad, y la respuesta abierta no puede quedar vacía. Las respuestas insuficientes se notifican sin interpretarlas como ausencia de habilidades. \\
 
 RF & 6 & Resultados &
-La plataforma deberá mostrar las tres carreras con mayor porcentaje de coincidencia, ordenadas de mayor a menor, junto con sus escuelas y un botón para descargar el reporte. \\
+La plataforma debe mostrar las tres carreras con mayor porcentaje de coincidencia, ordenadas de mayor a menor, con sus escuelas y un botón para descargar el reporte. \\
 
-RNF & 6.1 & Interacción con resultados &
-Cuando ninguna carrera alcance el porcentaje mínimo, deberá mostrarse una pantalla de ausencia de resultados con las opciones ``Intentar nuevamente'' y ``Elegir otra área''. \\
+RNF & 6.1 & Umbral de coincidencia &
+Si ninguna carrera supera el 50\,\% de coincidencia, debe mostrarse un mensaje de resultado no concluyente con las opciones ``Intentar nuevamente'' y ``Elegir otra área''. \\
 
-RF & 6.2 & Pantalla de error &
-Cuando no exista una coincidencia suficiente, la plataforma deberá informar que no fue posible generar una recomendación y permitir intentarlo nuevamente o elegir otra área. \\
-
-RI & 6.3 & Pantalla de resultados &
-La pantalla deberá mostrar el título de resultados, las carreras recomendadas, el porcentaje de coincidencia, las escuelas y el botón ``Descargar reporte'', con un diseño visual consistente. \\
-
-RI & 6.4 & Pantalla de error en resultados &
-La pantalla deberá mostrar un mensaje informativo sobre la coincidencia insuficiente y los botones ``Intentar nuevamente'' y ``Elegir otra área''. \\
+RI & 6.2 & Pantalla de resultados &
+La pantalla debe mostrar las carreras, el porcentaje de coincidencia, las escuelas y el botón ``Descargar reporte''. \\
 
 \end{xltabular}
 \endgroup
 
-
-
-
-
-
 \section{Diseño modular}
+El sistema se divide en servicios desacoplados con una responsabilidad cada uno (figura~\ref{fig:diseno-modular}). Esto permite que captura, análisis de texto, predicción y persistencia escalen y fallen de forma independiente.
+
 \begin{figure}[H]
 \centering
-\includegraphics[height=0.81\textheight,keepaspectratio]{imagenes/dModular.png}
+\includegraphics[angle=90,height=0.82\textheight,width=\textwidth,keepaspectratio]{imagenes/modular.png}
 \caption{Diseño modular del sistema}
 \label{fig:diseno-modular}
 \end{figure}
 
+\begin{itemize}
+    \item \textbf{Sitio web:} interfaz en Vue.js y Nuxt. Guía al aspirante por el cuestionario y muestra los resultados.
+    \item \textbf{API:} servicio en FastAPI. Valida las solicitudes con esquemas Pydantic, consulta la base de datos y publica el evento inicial.
+    \item \textbf{Orquestador (Redis):} bus de eventos entre servicios. Cada servicio lee de su propio flujo y publica en el del siguiente.
+    \item \textbf{Extractor:} servicio que consulta el modelo de decisiones Jev para medir la coincidencia entre las respuestas del aspirante y los criterios de las carreras.
+    \item \textbf{Clasificador:} servicio que aloja un modelo Random Forest por área y estima la afinidad del aspirante con cada carrera.
+    \item \textbf{Constructor de respuesta:} servicio que ordena las afinidades, aplica el umbral mínimo, selecciona las tres mejores carreras y agrega sus escuelas.
+    \item \textbf{Base de datos Athena:} PostgreSQL con la oferta académica, los criterios, las respuestas procesadas y los resultados.
+\end{itemize}
+
 \section{Diseño detallado}
+
+\subsection{Instrumento de captura}
+El cuestionario sustituye las 100 afirmaciones cerradas del instrumento institucional por dos bloques que se complementan. Ambos se ajustan al área elegida y se alimentan de los documentos oficiales de cada carrera.
+
+\noindent\textbf{1. Valoración de objetivos.}\par\smallskip
+Cada carrera aporta una pregunta derivada de su objetivo formativo. El aspirante la califica de 1 a 5 y, si lo desea, justifica su respuesta. Con 5 la justificación es obligatoria. Las preguntas se muestran en bloques de seis para limitar la carga cognitiva. El área 1 tiene 43 preguntas, el área 2 tiene 12 y el área 3 tiene 11.
+
+\noindent\textbf{2. Cuestionario RIASEC.}\par\smallskip
+Se presenta una pregunta por dimensión RIASEC. Cada una ofrece una lista de habilidades, con el resumen del criterio de cada carrera del área, y una pregunta abierta. El aspirante marca las habilidades en las que se reconoce y describe en texto libre su experiencia con ellas. Las habilidades marcadas se tratan como prioritarias. El texto abierto sirve para verificar que la habilidad declarada tenga respaldo y para detectar coincidencias con criterios que el aspirante no marcó.
+
+\subsection{Modelado de criterios con el modelo RIASEC}
+El modelo de Holland~\cite{Holland1997} agrupa intereses y actividades en seis dimensiones: Realista ($R$), Investigador ($I$), Artístico ($A$), Social ($S$), Emprendedor ($E$) y Convencional ($C$). Aquí se usa como esquema para organizar los criterios de cada carrera, no como diagnóstico de personalidad.
+
+Cada carrera tiene un criterio principal, que resume su habilidad central, y un criterio de perfil por dimensión. Los criterios se extraen de los documentos oficiales y se clasifican por dimensión con las reglas definidas por la asesora en psicología, Lic. Paola Alejandra Luna Cabrera (anexo~\ref{anexo:extraccion}). La dimensión $A$ casi no aparece en los documentos y solo se registró en una carrera del área 2. Por esa razón el modelo de afinidad usa las dimensiones $R$, $I$, $S$, $E$ y $C$.
+
+\subsection{Modelo de afinidad}
+Para cada área se entrena un modelo Random Forest~\cite{Breiman2001}. El modelo no asigna una clase por aspirante: estima un índice de afinidad entre 0 y 1 para cada par aspirante-carrera. Este diseño permite ordenar todas las carreras del área y entregar las tres mejores con su porcentaje, algo que una etiqueta única no ofrece. Por esto la tarea se formula como regresión de la afinidad y la clasificación de carreras resulta de ordenar los índices.
+
+Cada fila de entrada corresponde a una carrera evaluada para un aspirante y contiene las variables de la tabla~\ref{tab:features}, además de una codificación \textit{one-hot} de la carrera. El número de columnas depende del área: 55 en el área 1 (43 carreras y 12 variables), 24 en el área 2 y 23 en el área 3.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Variables de entrada del modelo de afinidad}
+\label{tab:features}
+\begin{tabularx}{\textwidth}{L{0.14\textwidth}L{0.30\textwidth}X}
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Variable} & \color{white}\textbf{Significado} & \color{white}\textbf{Origen} \\
+\midrule
+$O$ & Calificación del aspirante a la carrera & Valoración de objetivos \\
+\rowcolor{filaAlterna}
+$P$ & Coincidencia con el criterio principal de la carrera & Extractor, a partir de la justificación del objetivo \\
+$m_k$ & Coincidencia con el criterio de la dimensión $k$ & Extractor, a partir de la respuesta abierta \\
+\rowcolor{filaAlterna}
+$r_k$ & Repeticiones del criterio de la dimensión $k$ & Extractor: selección explícita y mención repetida \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Con $k \in \{R, I, S, E, C\}$ se obtienen 12 variables por carrera. Las coincidencias $m_k$ y $P$ se expresan entre 0 y 1.
+
+\subsection{Datos de entrenamiento}
+No existen registros históricos que relacionen las respuestas de aspirantes con la carrera que les convino. Por ello el modelo se entrena con aspirantes sintéticos, generados a partir de los criterios de cada carrera, y con una etiqueta calculada mediante una fórmula determinista. Con $\bar{a}_k$ el ajuste por repetición de la dimensión $k$:
+\begin{equation}
+\bar{a}_k =
+\begin{cases}
+0 & r_k = 0 \\
+m_k + 0.15\,(1-m_k)\left(1-e^{-(r_k-1)/2}\right) & r_k \ge 1
+\end{cases}
+\end{equation}
+\begin{equation}
+S = \frac{1}{5}\sum_{k}\bar{a}_k, \qquad
+B = 0.25\,O + 0.30\,P + 0.45\,S
+\end{equation}
+\begin{equation}
+H = \frac{0.30\,P + 0.45\,S}{0.75}, \qquad
+y = B\,\bigl(1 - 0.20\,\lvert O - H\rvert\bigr)
+\end{equation}
+La fórmula pondera más la evidencia de habilidades ($S$) que la calificación declarada ($O$) y penaliza al aspirante cuya calificación no concuerda con la evidencia ($\lvert O - H\rvert$). Los pesos son una decisión de diseño. No provienen de un estudio empírico y deben ajustarse con datos reales.
+
+Los aspirantes sintéticos se reparten en ocho escenarios que cubren desde perfiles con evidencia completa hasta perfiles sin coincidencias, y se complementan con perfiles dirigidos para cubrir todo el rango de $y$ en cada carrera. La partición es 70\,\% para entrenamiento, 15\,\% para validación y 15\,\% para prueba, estratificada por escenario. Cada aspirante pertenece a una sola partición y cada uno es independiente de los demás, por lo que no hay fuga de datos entre particiones.
+
 \subsection{Diagramas de flujo modulares}
-\subsection{Diagrama entidad-relación}
+El procesamiento es reactivo: cada servicio recibe un evento, lo procesa y publica el siguiente.
+
+\noindent\textbf{1. Sitio web.}\par\smallskip
+El aspirante pasa por cinco pantallas: introducción; datos, área y términos; objetivos; RIASEC; y resultados (figura~\ref{fig:flujo-website}). Tras elegir el área, el sitio solicita a la API las preguntas correspondientes. Al terminar el cuestionario, valida los campos y envía las respuestas en un solo objeto JSON. Después espera el resultado para mostrar las tres carreras y sus escuelas.
+
 \begin{figure}[H]
 \centering
-\includegraphics[height=0.81\textheight,keepaspectratio]{imagenes/athenaBD.png}
+\includegraphics[width=\textwidth,height=0.62\textheight,keepaspectratio]{imagenes/website.png}
+\caption{Diagrama de flujo del sitio web}
+\label{fig:flujo-website}
+\end{figure}
+
+\noindent\textbf{2. API.}\par\smallskip
+La API expone cuatro operaciones: lista de áreas, preguntas de un área, recepción de respuestas y consulta de resultados (figura~\ref{fig:flujo-api}). Al recibir las respuestas, valida su estructura con Pydantic, genera un identificador único (UUID), registra al usuario y publica un \texttt{ExtractorEvent}. Responde de inmediato con el UUID, que el sitio usa para consultar el resultado cuando esté listo.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth,height=0.55\textheight,keepaspectratio]{imagenes/api.png}
+\caption{Diagrama de la API}
+\label{fig:flujo-api}
+\end{figure}
+
+\noindent\textbf{3. Extractor.}\par\smallskip
+El extractor lee el \texttt{ExtractorEvent}, arma un prompt con las respuestas del aspirante y los criterios de las carreras del área y consulta a Jev en una sola llamada (figura~\ref{fig:flujo-extractor}). Con la respuesta construye la lista de habilidades con su porcentaje de coincidencia y publica un \texttt{ClassifierEvent}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.60\textwidth,height=0.62\textheight,keepaspectratio]{imagenes/extractor.png}
+\caption{Diagrama de flujo del extractor}
+\label{fig:flujo-extractor}
+\end{figure}
+
+\noindent\textbf{4. Clasificador y constructor de respuesta.}\par\smallskip
+El clasificador lee el \texttt{ClassifierEvent}, arma el vector de características, aplica el modelo del área elegida y publica un \texttt{ConstructorEvent} con la afinidad de cada carrera. El constructor ordena las carreras de mayor a menor y verifica que la mejor supere el 50\,\% de coincidencia. Si la supera, toma las tres primeras, agrega sus escuelas y guarda el resultado. Si no la supera, guarda el estado de clasificación fallida (figura~\ref{fig:flujo-classifier}). En ambos casos publica un \texttt{ResponseEvent} para notificar a la API.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\textwidth,height=0.60\textheight,keepaspectratio]{imagenes/classifier.png}
+\caption{Diagrama de flujo de clasificación y construcción de la respuesta}
+\label{fig:flujo-classifier}
+\end{figure}
+
+\subsection{Contratos de eventos}
+Los servicios se comunican con eventos JSON tipados con Pydantic (tabla~\ref{tab:eventos}). Un esquema común entre servicios evita incompatibilidades de formato.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Eventos del sistema}
+\label{tab:eventos}
+\begin{tabularx}{\textwidth}{L{0.20\textwidth}L{0.20\textwidth}X}
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Evento} & \color{white}\textbf{Flujo} & \color{white}\textbf{Contenido} \\
+\midrule
+\texttt{ExtractorEvent} & API $\rightarrow$ extractor & Identificadores del usuario, área, calificación y justificación de cada objetivo, habilidades marcadas y respuesta abierta por dimensión. \\
+\rowcolor{filaAlterna}
+\texttt{ClassifierEvent} & Extractor $\rightarrow$ clasificador & Usuario, área y lista de habilidades con su coincidencia y repeticiones. \\
+\texttt{ConstructorEvent} & Clasificador $\rightarrow$ constructor & Usuario y lista de carreras con su afinidad. \\
+\rowcolor{filaAlterna}
+\texttt{ResponseEvent} & Constructor $\rightarrow$ API & Usuario y hasta tres resultados con carrera, porcentaje, escuelas y posición. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Diagrama entidad-relación}
+La información se almacena en una base de datos relacional llamada Athena, en PostgreSQL, con 13 tablas (figura~\ref{fig:arquitectura-base-datos}). Se organizan en cuatro grupos:
+\begin{enumerate}
+    \item \textbf{Oferta académica:} \texttt{areas}, \texttt{carreras}, \texttt{escuelas} y \texttt{escuela\_carrera}. La tabla \texttt{carreras} guarda el objetivo formativo y la pregunta de objetivo de cada programa. \texttt{escuela\_carrera} relaciona carreras con escuelas, porque una carrera se imparte en varios planteles.
+    \item \textbf{Criterios:} \texttt{tipos\_riasec}, \texttt{tipos\_criterio} y \texttt{criterios}. Cada criterio pertenece a una carrera, a una dimensión RIASEC y a un tipo (principal o de perfil), y guarda su descripción y un resumen de hasta 100 caracteres.
+    \item \textbf{Cuestionario:} \texttt{pregunta\_cuestionario} y \texttt{cuestionarios}. La primera guarda el texto de las preguntas por dimensión y la segunda las asigna a cada área.
+    \item \textbf{Operación:} \texttt{usuarios}, \texttt{puntaje\_objetivo}, \texttt{usuario\_criterio} y \texttt{resultados}. \texttt{usuarios} identifica cada sesión con un UUID, un estatus de procesamiento (pendiente, extraído, clasificado o completado) y un tipo (entrenamiento, validación, prueba o real). Las otras tres tablas guardan la calificación de cada objetivo, la coincidencia y repeticiones de cada criterio, y el porcentaje de coincidencia por carrera.
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[angle=90,height=0.82\textheight,width=\textwidth,keepaspectratio]{imagenes/baseDatosathena.png}
 \caption{Diagrama entidad-relación de la base de datos Athena}
 \label{fig:arquitectura-base-datos}
 \end{figure}
 
 \subsection{Arquitectura de software}
+La arquitectura es de microservicios desacoplados que se comunican por eventos a través de Redis (figura~\ref{fig:arquitectura-software}). Las tareas pesadas, como consultar a Jev o aplicar el modelo, no bloquean a la API, que responde al sitio en cuanto registra la solicitud. Redis se usa mediante flujos (\textit{streams}) con grupos de consumo~\cite{RedisStreams}, de modo que cada evento se entrega a un solo consumidor del servicio.
+
+\begin{figure}[H]
+\centering
+\includegraphics[angle=90,height=0.82\textheight,width=\textwidth,keepaspectratio]{imagenes/arquitectura.png}
+\caption{Arquitectura de software orientada a eventos}
+\label{fig:arquitectura-software}
+\end{figure}
+
 \subsection{Arquitectura de nube}
+El despliegue objetivo corre en Google Cloud dentro de una red privada virtual (VPC), como se muestra en la figura~\ref{fig:arquitectura-nube}. Los servicios se ejecutan como contenedores en Google Kubernetes Engine. La base de datos se aloja en Cloud SQL para PostgreSQL y el orquestador en Memorystore para Redis. Solo el sitio web y la API son accesibles desde internet, a través de un balanceador HTTPS. La comunicación interna usa direcciones privadas.
 
-\section{Desarrollo de herramientas psicológicas}
-\subsection{Extracción de criterios con el modelo RIASEC}
-\subsection{Creación de formulario orientado al modelo RIASEC}
+\begin{figure}[H]
+\centering
+\includegraphics[angle=90,height=0.82\textheight,width=\textwidth,keepaspectratio]{imagenes/infraestructura.png}
+\caption{Arquitectura de infraestructura y despliegue en la nube}
+\label{fig:arquitectura-nube}
+\end{figure}
 
-\section{Extracción e inserción de datos}
-\subsection{Extracción de áreas, escuelas, carreras y habilidades}
-\subsection{Conjunto de entrenamiento de modelos}
-
-\section{Desarrollo de microservicios}
-\section{Desarrollo del sitio web}
-
-\section{Implementación de infraestructura}
-\subsection{Despliegue de servicios}
-\subsection{Configuración de redes}
-\subsection{Integración y despliegue continuo (CI/CD)}
-
-\section{Pruebas de desarrollo}
-\subsection{Pruebas de integración de módulos}
-\subsection{Pruebas unitarias}
-
-%%%%%%fin del archivo
-\endinput 
+\endinput

@@ -1,0 +1,152 @@
+\section{Análisis funcional y empírico del Perfil de Preferencias Profesionales (IPN)}
+\label{sec:analisis-ppp}
+
+El sistema digital ``Perfil de Preferencias Profesionales para Aspirantes a la Educación de Nivel Superior'', desarrollado por la Dirección de Apoyos a Estudiantes del Instituto Politécnico Nacional (IPN), constituye el antecedente institucional directo del presente trabajo. Su propósito formal es identificar los intereses y habilidades vocacionales de los aspirantes para orientar su elección hacia las áreas de nivel superior del Instituto. Su método operativo consiste en un cuestionario estructurado de 100 afirmaciones con opciones cerradas (``Siempre'', ``En ocasiones'' y ``Nunca''), asociadas con diferentes ramas del conocimiento, arrojando como salida la orientación del aspirante hacia el área con mayor puntaje relativo.
+
+Con la finalidad de identificar el nivel de detalle de sus entradas y salidas y fundamentar la necesidad técnica de un modelo clasificador de mayor granularidad a nivel de programa académico, se realizó un análisis funcional y de datos sobre este instrumento. La revisión examina la información que recibe el aspirante y su correspondencia con la oferta institucional. El material de análisis comprende la introducción del cuestionario, cinco capturas de los reactivos 1 a 100, pantallas de resultados y tres reportes PDF fechados el 25 de octubre de 2026, conservados en la carpeta \nolinkurl{capturasPPP/}.
+
+La captura \nolinkurl{introPPP.png} establece una duración aproximada de 30 minutos e indica responder de acuerdo con la facilidad percibida para realizar actividades, sin que necesariamente agraden al participante. Las capturas \nolinkurl{p1-20PPP.png}, \nolinkurl{p21-40PPP.png}, \nolinkurl{p41-60PPP.png}, \nolinkurl{p61-80PPP.png} y \nolinkurl{81-100PPP.png} documentan el contenido y la secuencia del formulario. No constituyen un registro completo de las respuestas finales de las tres ejecuciones: algunas muestran reactivos sin seleccionar. Las condiciones de aplicación proceden del relato del responsable de las pruebas y deben distinguirse de los puntajes verificables en los PDF.
+
+\noindent\textbf{Entradas, representación de datos y flujo observable.}\par\smallskip
+
+El formulario presenta 100 actividades en cinco bloques de 20 reactivos, con indicadores de avance de 20\% a 100\% y controles de navegación. Cada actividad admite una respuesta entre ``Siempre'', ``En ocasiones'' y ``Nunca''. Se trata de categorías ordenadas de autoinforme; la interfaz no permite conocer su codificación numérica ni asumir que las distancias entre categorías sean iguales. Tampoco debe confundirse la declaración del participante con una medición directa de su desempeño.
+
+Los reactivos abarcan actividades de distinta especialización. Por ejemplo, el reactivo 1 se refiere al diseño de sistemas informáticos; el 28, a modelos matemáticos para transformar materiales; el 38 combina arte, creatividad y tecnología; el 64 aborda programación y mantenimiento de redes y sistemas operativos; y el 98 trata la interpretación de planos de instalaciones eléctricas y electrónicas. Estos ejemplos muestran que existe información potencialmente más específica que una etiqueta general de área. También hay enunciados que reúnen varios conocimientos o tareas: una sola respuesta no permite separar cuánto declara el participante respecto de cada componente.
+
+Para el sistema propuesto se distinguirán los intereses, las habilidades autodeclaradas y las experiencias descritas en texto. Las dimensiones RIASEC representan intereses vocacionales; no deben utilizarse indistintamente como mediciones de habilidades. Esta separación define qué variables se obtienen del cuestionario, cuáles requieren preguntas adicionales y cómo se compararán con los atributos académicos de las carreras.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Datos observables en el Perfil de Preferencias Profesionales y límites de interpretación}
+\label{tab:datos-ppp}
+\begin{tabularx}{\textwidth}{L{0.22\textwidth}XX}
+\toprule
+\textbf{Elemento} & \textbf{Evidencia observable} & \textbf{Límite técnico} \\
+\midrule
+Identificación & Nombre en la sesión y nombre y fecha en el PDF. & No se conoce el esquema de almacenamiento ni el uso de esos campos en el cálculo. \\
+Respuestas & Una selección entre tres categorías por cada uno de los 100 reactivos. & No se dispone del vector completo de respuestas de cada ejecución. \\
+Puntajes & Seis valores por área, ordenados en el reporte. & No se muestran pesos, máximos, normalización ni contribuciones por reactivo. \\
+Descripción & Texto, aptitudes, intereses y competencias del área con mayor puntaje. & El reporte no aporta evidencia de que cada atributo haya sido medido individualmente. \\
+Oferta académica & Listados por área para IPN y ámbito nacional; aviso de orden alfabético. & En la evidencia no se muestran puntuaciones de afinidad por carrera ni un orden individualizado. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+El flujo visible puede describirse como captura de respuestas, presentación de seis puntajes, descripción del área de mayor valor y consulta de carreras por área. La forma interna de calcular los puntajes permanece desconocida. Cabe destacar que las seis categorías del Perfil de Preferencias Profesionales no coinciden con la estructura curricular del Instituto Politécnico Nacional, el cual organiza su oferta académica formalmente en tres áreas de estudio: Ingeniería y Ciencias Físico-Matemáticas, Ciencias Médico-Biológicas, y Ciencias Sociales y Administrativas. Tampoco equivalen directamente a las seis dimensiones del modelo RIASEC; se trata de taxonomías distintas cuya correspondencia analítica debe definirse explícitamente en el modelado de datos.
+
+\noindent\textbf{Resultados de las tres ejecuciones exploratorias.}\par\smallskip
+
+La correspondencia entre archivos y condiciones fue confirmada por el responsable de las pruebas: E1 es \nolinkurl{resultadoPPP.pdf}, con las 100 respuestas en ``Siempre''; E2 es \nolinkurl{resultadoPPPart1_cf2.pdf}, primer intento dirigido hacia Físico Matemáticas que obtuvo Ciencias y Humanidades; E3 es \nolinkurl{resultadoPPPcfBH.pdf}, segundo intento dirigido que obtuvo Físico Matemáticas. Los nombres reproducen los archivos del repositorio. Las capturas \nolinkurl{resExtAllnSiePPP.png} y \nolinkurl{rExHumyCieFIPPP.png} permiten relacionar E1 y E2 con sus pantallas de resultados. La intención de respuesta describe la condición del ensayo, no una etiqueta de referencia para medir exactitud.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Puntajes transcritos de los tres reportes del Perfil de Preferencias Profesionales}
+\label{tab:resultados-ppp}
+\begin{tabularx}{\textwidth}{Xrrr}
+\toprule
+\textbf{Área, según el reporte} & \textbf{E1} & \textbf{E2} & \textbf{E3} \\
+\midrule
+Ciencias Administrativas & 54 & 20 & 22 \\
+Ciencias Biológicas & 51 & 18 & 17 \\
+Físico Matemáticas & 51 & 27 & 33 \\
+Ciencias y Humanidades & 48 & 31 & 19 \\
+Ciencias Sociales & 48 & 18 & 16 \\
+Ciencias Químicas & 48 & 20 & 23 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\textbf{E1: respuesta uniforme.} El reporte presenta Ciencias Administrativas en primer lugar, con 54 puntos, y una descripción del área acompañada de aptitudes, intereses y competencias. Este caso permite observar el formato de salida ante el patrón uniforme documentado. No se usa para reconstruir la regla de puntuación ni para evaluar la calidad de la clasificación.
+
+\textbf{E2: primer intento dirigido.} El reporte presenta Ciencias y Humanidades con 31 puntos y Físico Matemáticas con 27. En la captura de resultados, el listado del IPN muestra ``No se encontraron carreras en el área de interés'', mientras el listado nacional ofrece opciones como Actuación y Animación y Arte Digital. La categoría de salida se denomina Ciencias y Humanidades, aunque su descripción incluya intereses artísticos. El caso permite distinguir la orientación por área de su vinculación con la oferta académica institucional.
+
+\textbf{E3: segundo intento dirigido.} Físico Matemáticas ocupa el primer lugar con 33 puntos. El resultado corresponde al área buscada por el participante y presenta una descripción general junto con aptitudes e intereses. Aun en este caso, el PDF no proporciona un orden de carreras específicas basado en el perfil individual. Esta observación fundamenta el proyecto: después de identificar un área continúa pendiente la comparación entre los programas que pertenecen a ella.
+
+Los tres casos documentan el alcance de la salida, sin asignarles calificaciones de acierto o error. Los reportes tienen como unidad de resultado el área de conocimiento. Las pantallas amplían la consulta mediante catálogos de carreras, pero anuncian un orden alfabético y no muestran afinidades individuales por programa. La necesidad de mayor detalle permanece incluso cuando el área obtenida coincide con la intención del participante.
+
+\noindent\textbf{Formulación del problema como tarea de recomendación.}\par\smallskip
+
+La propuesta cambia la unidad de decisión: del área de conocimiento al programa académico. Es un problema de recomendación y ordenación de alternativas, pues varias carreras pueden ser pertinentes para un mismo perfil. Una clasificación multiclase puede formar parte del procesamiento si se dispone de etiquetas adecuadas, pero seleccionar tres probabilidades de un clasificador no demuestra por sí mismo la pertinencia de las tres recomendaciones.
+
+Se propone conservar el perfil completo del aspirante y sus rasgos específicos en lugar de utilizar solamente el nombre de su área predominante. Dos aspirantes pueden elegir Físico Matemáticas y describir experiencias diferentes: uno puede referirse a programación y otro al diseño de mecanismos. Este ejemplo es conceptual; no constituye un resultado experimental. Su utilidad es mostrar por qué el área funciona como restricción del catálogo y por qué hacen falta variables adicionales para ordenar carreras dentro de ella.
+
+La representación del aspirante combinará dimensiones de interés, atributos específicos declarados y evidencia textual. La representación de cada carrera se construirá a partir de documentos oficiales, distinguiendo perfil de ingreso, objetivos, contenidos y perfil de egreso. Ambas deberán compartir criterios comparables, como actividades, temas y campos de aplicación. Cuando se requiera asignar dimensiones RIASEC a una carrera, la correspondencia se documentará y revisará con apoyo especializado; no se considerará una etiqueta oficial si fue elaborada para este proyecto.
+
+El filtrado basado en contenido proporciona una base para esta formulación: representa usuarios y alternativas mediante características comparables y calcula puntuaciones individuales para ordenar candidatos~\cite{GoogleContentBased2025}. Su adaptación al presente proyecto consistirá en filtrar primero las carreras por área y ubicación, calcular su correspondencia con el perfil y presentar hasta tres opciones con sus evidencias. Esta adaptación es una propuesta de diseño, no un resultado obtenido por el instrumento institucional.
+
+\noindent\textbf{Técnicas propuestas y evidencia científica externa.}\par\smallskip
+\label{sec:evidencia-datos}
+
+\textbf{Aprendizaje a partir de perfiles y reactivos.} Song et al.~\cite{Song2024Career} estudiaron una muestra de 81\,267 participantes. Combinaron las puntuaciones de 16 reactivos y seis escalas RIASEC mediante un ensamble de red neuronal, vecinos cercanos, elastic net y Random Forest. Su tabla 5 reporta una tasa de coincidencia del código RIASEC predominante de la ocupación de 0.28 con comparación de perfiles y 0.34 con el método aumentado; para aspiraciones vocacionales, pasó de 0.34 a 0.36. La evaluación utilizó 100 repeticiones con muestras de 300 participantes. El estudio respalda investigar el aporte de información específica junto con escalas generales, pero sus resultados corresponden a perfiles ocupacionales, no a exactitud en carreras universitarias del IPN. Además, la mejora global favoreció categorías frecuentes y no fue uniforme entre categorías.
+
+\textbf{Representación semántica del texto.} Reimers y Gurevych~\cite{Reimers2019SBERT} desarrollaron el modelo Sentence-BERT para comparar representaciones vectoriales de textos mediante similitud coseno. En la tabla 1 de su estudio, SBERT-NLI-large obtuvo una correlación de Spearman promedio de 76.55, frente a 54.81 del promedio de representaciones BERT, sobre siete evaluaciones de similitud textual. Los valores se expresan como correlación multiplicada por 100; no son porcentajes de acierto vocacional. Esta evidencia sustenta evaluar representaciones especializadas para comparar respuestas abiertas y descripciones académicas. Su aplicación a textos en español y al catálogo del IPN requerirá una evaluación propia y un modelo apropiado para el idioma.
+
+Ambos antecedentes apoyan decisiones técnicas distintas: el primero, combinar información general y específica; el segundo, representar relaciones semánticas en texto. No establecen un porcentaje de mejora esperado para este proyecto. La hipótesis que se evaluará es que incorporar características específicas y evidencia textual permite ordenar carreras con mayor pertinencia que utilizar únicamente una representación general de intereses.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Técnicas candidatas y función dentro de la recomendación}
+\label{tab:tecnicas-recomendacion}
+\begin{tabularx}{\textwidth}{L{0.23\textwidth}XX}
+\toprule
+\textbf{Técnica} & \textbf{Uso propuesto} & \textbf{Evidencia que requiere} \\
+\midrule
+Correspondencia de atributos & Comparar perfiles mediante criterios explícitos y pesos documentados; establecer una referencia sencilla. & Catálogo de atributos, reglas y revisión de su significado. \\
+TF-IDF y similitud coseno & Comparar vocabulario de respuestas y documentos como referencia léxica. & Corpus en español y juicios de pertinencia para evaluar el orden. \\
+Representaciones semánticas & Comparar descripciones con expresiones distintas pero significado relacionado. & Modelo apropiado para español y pruebas con negaciones, contexto y textos del dominio. \\
+Clasificación supervisada, incluido Random Forest & Aprender relaciones entre rasgos del perfil y carreras cuando existan ejemplos etiquetados. & Perfiles con etiquetas justificadas, suficientes casos por carrera y evaluación independiente. \\
+Combinación de puntuaciones & Integrar correspondencia estructurada y textual para ordenar candidatos. & Escalas comparables y pesos ajustados con datos de validación, no con la prueba final. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Las técnicas de la tabla~\ref{tab:tecnicas-recomendacion} constituyen alternativas de implementación y comparación. La selección final dependerá de los datos disponibles y de los resultados de evaluación. El uso de aprendizaje automático no exige presentar Random Forest como el mejor método antes de probarlo. Si inicialmente sólo se dispone del catálogo académico, puede construirse una referencia basada en contenido; el entrenamiento supervisado requiere además ejemplos de correspondencia entre perfiles y carreras. Un modelo que únicamente clasifica documentos por el nombre de su carrera no habrá aprendido necesariamente a recomendar esa carrera a un aspirante.
+
+\noindent\textbf{Brecha funcional y requisitos del sistema.}\par\smallskip
+
+El Perfil de Preferencias Profesionales presenta información de carreras por área. Por ello, la brecha que se propone atender es la ausencia observable de una ordenación individual por carrera con criterios trazables, y no la inexistencia de un catálogo. El sistema propuesto debe resolver una correspondencia de mayor detalle entre datos del aspirante y atributos documentados de programas académicos dentro del área previamente seleccionada.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Comparación funcional y requisitos derivados de la evidencia}
+\label{tab:comparativa-ppp}
+\begin{tabularx}{\textwidth}{L{0.20\textwidth}XX}
+\toprule
+\textbf{Criterio} & \textbf{Instrumento institucional} & \textbf{Requisito de la propuesta} \\
+\midrule
+Entradas & 100 respuestas cerradas sobre actividades. & Integrar respuestas cerradas y texto libre, conservando su procedencia y calidad. \\
+Resolución & Puntajes por seis áreas; carreras agrupadas por área. & Hasta tres carreras del área elegida, ordenadas por correspondencia con el perfil. \\
+Explicación & Descripción y atributos asociados al área principal. & Relacionar cada recomendación con rasgos declarados y fuentes del catálogo. \\
+Orden & Listados anunciados como alfabéticos. & Definir y evaluar un criterio de orden individualizado por carrera. \\
+Casos límite & Los casos ilustran distintas áreas y la consulta de la oferta institucional. & Informar perfiles insuficientes o poco diferenciados y ausencia de candidatos; no forzar tres opciones. \\
+Verificación & Tres reportes sin vectores finales completos. & Registrar entradas, versiones, salidas y criterios de evaluación para reproducir cada caso. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Para implementar estos requisitos se necesita un esquema de datos que relacione aspirante o identificador seudónimo, respuestas, dimensiones del perfil, área elegida, carrera, unidad académica, ubicación y documentos fuente con su versión. Debe diferenciarse entre requisitos de ingreso, objetivos formativos y capacidades de egreso. El modelo también deberá conservar la versión del cuestionario y del procedimiento de recomendación. Los puntajes de afinidad, si se presentan en una escala porcentual, deberán explicarse como índices de correspondencia; no equivalen a probabilidades de éxito académico sin una validación específica.
+
+La selección previa de área establece un límite importante: el prototipo no resolverá automáticamente una elección inicial de área inadecuada. Su contribución se evaluará dentro del área declarada. Por tanto, no procede afirmar que corregirá la clasificación general del instrumento institucional; ofrecerá una etapa complementaria de recomendación de programas.
+
+\noindent\textbf{Evaluación técnica de la solución propuesta.}\par\smallskip
+\label{sec:validacion-ppp}
+
+La comparación con el instrumento institucional deberá separar funciones distintas. La cantidad y el detalle de las salidas pueden compararse mediante casos documentados; la pertinencia de una recomendación individual requiere una referencia adicional. No sería válido medir exactitud comparando una etiqueta de área del instrumento institucional con una carrera del prototipo como si fueran la misma variable.
+
+Para habilitar el entrenamiento y la validación de los tres modelos supervisados (uno por cada área del conocimiento del IPN), se construyó un conjunto de perfiles sintéticos a partir de los criterios extraídos de los descriptores curriculares oficiales (perfil de ingreso, objetivo formativo y perfil de egreso). La etiqueta de afinidad de cada perfil se calcula con una fórmula determinista (capítulo de diseño), no con juicios de especialistas. Por eso la evaluación con casos revisados por especialistas sigue siendo necesaria. Los documentos académicos permiten describir las carreras de manera estática, pero la generación y etiquetado de perfiles sintéticos proporciona la variabilidad y densidad muestral requerida para que los algoritmos de ensamble (Random Forest) aprendan a correlacionar patrones de habilidades con programas académicos específicos.
+
+El conjunto de evaluación se mantuvo estrictamente separado del conjunto de entrenamiento mediante particionamiento estratificado. Los registros correspondientes a variantes de un mismo perfil base permanecen en una sola partición para evitar la fuga de información (data leakage). Los resultados se reportan de forma independiente para cada una de las tres áreas del conocimiento del IPN con el número de casos evaluados.
+
+\begin{enumerate}
+\item \textbf{Pertinencia entre las tres primeras opciones:} proporción de recomendaciones consideradas pertinentes por la referencia independiente, y proporción de perfiles con al menos una opción pertinente. Se reportará el número efectivo de opciones cuando el sistema se abstenga o entregue menos de tres. Para evaluar el orden se calculará también NDCG@3, que compara la relevancia acumulada de las primeras tres posiciones con el mejor orden posible según los juicios de referencia. Los grados de relevancia y el tratamiento de casos sin carreras pertinentes se definirán antes de la evaluación.
+\item \textbf{Cobertura y abstención:} proporción de carreras elegibles que aparecen en las recomendaciones, distribución de frecuencias y proporción de perfiles sin información suficiente. La cobertura no sustituye la pertinencia.
+\item \textbf{Aporte del procesamiento:} comparar el modelo con un método explícito de correspondencia de atributos, usando el mismo catálogo y restricción de área. Comparar además una variante con respuestas cerradas frente a otra que incorpore texto libre.
+\item \textbf{Trazabilidad y robustez:} verificar que las explicaciones se apoyen en respuestas y documentos existentes; repetir entradas idénticas y evaluar cambios controlados, respuestas uniformes y contradicciones. Registrar los cambios en el orden sin asumir que toda variación sea un error.
+\item \textbf{Operación:} medir latencia mediana y percentil 95 bajo una carga definida, tasa de solicitudes fallidas e integridad de los registros. Una arquitectura modular o el uso de contenedores no demuestra por sí solo escalabilidad.
+\end{enumerate}
+
+Los umbrales de aceptación, el tamaño y composición de la muestra y las condiciones de carga deberán establecerse antes de consultar los resultados finales. La mejora de pertinencia permanecerá como hipótesis hasta ejecutar este protocolo. El Perfil de Preferencias Profesionales se utilizará como referente del alcance funcional de la orientación por áreas; la evaluación cuantitativa comparará métodos que recomienden carreras sobre un mismo conjunto de casos. Así se distinguirá entre ofrecer una salida más específica y demostrar que esa salida es pertinente.

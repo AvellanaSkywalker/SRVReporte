@@ -1,5 +1,7 @@
 % ----------------------------------------------------------------------
 %---------------------------------------------------------------------
+% --- Compilacion rapida mientras se redacta (volver a comentar para la version final) ---
+%\PassOptionsToPackage{draft}{graphicx}   % no incrusta imagenes: muestra solo recuadros
 \documentclass[letterpaper,11pt]{upiita}
 \usepackage{configuracion/upiitatesis}
 \usepackage{booktabs}
@@ -24,13 +26,16 @@
 \alumnob{Jacobo Emiliano Monroy Cortines}
 %%%%%%%%%% número de asesores 1= solo se toma en cuenta la variable asesora,
 %%%%%%%%%%  2= se toman asesora y asesorb
-\nasesores{2}
+\nasesores{3}
 %%%%%%% en caso de un único asesor asesora,
 %%%%%%%  eliminar o comentar las líneas
 \asesora{Dra. Marbella Calvino Gallardo}
 \asesorb{Ing. Francisco Salvador Muñoz Gómez}
+\asesorc{Lic. Paola Alejandra Luna Cabrera}
+%\includeonly{capitulos/marco_metodologico}   % compila solo los capitulos cargados con \include (conserva numeracion y referencias)
 %%%%%% Inicio de documento %%%%%%
 \begin{document}
+\raggedbottom
 \makeatletter \def\@roman#1{\romannumeral #1}\makeatother
 \makeatletter
 \let\originalcleardoublepage\cleardoublepage
@@ -43,10 +48,25 @@
   \cambiamargen
   \pagenumbering{roman}
   \setcounter{page}{1}
+  \setcounter{secnumdepth}{2}
+  \setcounter{tocdepth}{2}
   \@mainmatterfalse
 }
 \makeatother
 \frontmatter
+
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{#1}}
+\fancyhf{}
+\fancyhead[LE]{{\scriptsize\sffamily\leftmark}}
+\fancyhead[RO]{{\scriptsize\sffamily\rightmark}}
+\fancyhead[LO,RE]{}
+\fancyfoot{}
+\fancyfoot[RO,LE]{\thepage}
+\fancyfoot[CO]{ESIME}
+\fancyfoot[CE]{IPN}
+\fancyfoot[RE,LO]{Ing. Computación}
 \setlength{\oddsidemargin}{16pt}
 \setlength{\evensidemargin}{16pt}
 \renewcommand{\Vlines}{%
@@ -121,7 +141,7 @@
 %%% modificar archivo capitulos/marco_metodologico.tex
 \MarcodeReferencia
 %%% modificar archivo capitulos/diseno_sistema.tex
-%\include{capitulos/desarrollo_sistema}
+\include{capitulos/desarrollo_sistema}
 %%% modificar archivo capitulos/desarrollo_sistema.tex
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  \final

@@ -1,3 +1,197 @@
-\chapter{Pruebas y resultados}
-%%%%%%fin del archivo
+﻿\chapter{Pruebas y resultados}
+Este capítulo presenta la evidencia disponible sobre el funcionamiento del sistema: pruebas automatizadas, verificación del extractor, costo y tiempos de los modelos, y el cumplimiento de requerimientos y objetivos. Cada resultado indica su fuente. Donde no hay medición, se dice de forma explícita.
+
+\section{Alcance de la evaluación}
+La evaluación cubre los componentes que están implementados. El sistema todavía no entrega resultados al aspirante, por lo que no se pudo medir la pertinencia de las recomendaciones ni la latencia de extremo a extremo. Tampoco se aplicó el sistema a aspirantes reales. Estas mediciones corresponden al protocolo definido en el anexo~\ref{anexo:herramientas} y quedan como trabajo futuro.
+
+\section{Pruebas automatizadas}
+\subsection{Sitio web}
+El 26 de octubre de 2026 se ejecutó la suite del sitio con Vitest 5.0.5 y \texttt{happy-dom}. Constó de 12 archivos y 91 casos. Pasaron 90 y falló 1 (tabla~\ref{tab:pruebas-web}). La prueba fallida pertenece al componente del avatar acompañante: espera que el mensaje de estado incluya el nombre ``Atlas'' y recibe el texto de una frase motivacional. Es un defecto de la interfaz secundaria y no afecta el envío de la evaluación.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Resultado de las pruebas del sitio web}
+\label{tab:pruebas-web}
+\begin{tabular}{lr}
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Concepto} & \color{white}\textbf{Cantidad} \\
+\midrule
+Archivos de prueba & 12 \\
+\rowcolor{filaAlterna}
+Casos ejecutados & 91 \\
+Casos aprobados & 90 \\
+\rowcolor{filaAlterna}
+Casos fallidos & 1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Backend}
+El backend define 10 funciones de prueba (12 casos). No se ejecutaron durante la redacción de este documento porque el entorno requiere Python 3.14 y las dependencias fijadas. El registro de una ejecución local anterior, del 24 de octubre, contiene seis casos recolectados y marca el módulo de contrato de la API como fallido. Por tanto, no se afirma que el conjunto pase completo. Debe ejecutarse antes de la entrega y registrarse su resultado.
+
+\section{Verificación del extractor}
+Se verificó el extractor con una evaluación real del área 1, enviada desde el sitio. El proceso la consumió, construyó el prompt, consultó a Jev y guardó el resultado. La tabla~\ref{tab:extractor-real} resume lo observado.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Verificación del extractor con una evaluación real del área 1}
+\label{tab:extractor-real}
+\begin{tabularx}{\textwidth}{L{0.38\textwidth}X}
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Medición} & \color{white}\textbf{Valor} \\
+\midrule
+Preguntas enviadas a Jev & 259 (215 de puntuación y 44 de repetición) en una llamada \\
+\rowcolor{filaAlterna}
+Tamaño de la entrada & 14,431 caracteres \\
+Tiempo total & Menos de 45 s, incluido el arranque del proceso \\
+\rowcolor{filaAlterna}
+Memoria máxima & 116 MiB (Windows) \\
+Criterios prioritarios evaluados & 44, con coincidencias de 6 a 62 \\
+\rowcolor{filaAlterna}
+Criterios con repetición confirmada & 1 \\
+Criterios no prioritarios aceptados & 1 (coincidencia de 62) \\
+Estado final de Redis & Sin mensajes pendientes \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Dos hallazgos requieren atención. Primero, las 43 calificaciones de objetivos llegaron sin justificación, porque solo es obligatoria con calificación 5. Esto dejó vacía la parte del estado que evalúa los criterios principales, y el modelo de afinidad espera ese valor para todas las carreras. Segundo, las coincidencias fueron bajas y dispersas: solo cuatro de los 44 criterios prioritarios superan 0.30, mientras que los aspirantes sintéticos de entrenamiento tienen, en su gran mayoría, muchas coincidencias. Los vectores reales pueden quedar fuera de la zona mejor cubierta por el entrenamiento. Por ello los resultados deben interpretarse primero como un orden de carreras y no como porcentajes absolutos.
+
+\section{Costo de Jev}
+La tabla~\ref{tab:costo-jev} muestra el tamaño y costo de la llamada a Jev por área, medidos con los datos reales de criterios y respuestas sintéticas con tres criterios prioritarios por dimensión. El precio de entrada es de 42 USD por mil millones de tokens y la salida no tiene costo~\cite{JevAPI2026}. El costo por evaluación es inferior a 0.003 USD. Sin el límite de 11 habilidades por dimensión, el área 1 con las 43 marcadas (473 preguntas) falló por exceder el máximo de 64,000 tokens por solicitud. De ahí el tope en el sitio.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Tamaño y costo de una llamada a Jev por área}
+\label{tab:costo-jev}
+\begin{tabular}{rrrrrr}
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Área} & \color{white}\textbf{Carreras} & \color{white}\textbf{Preguntas} & \color{white}\textbf{Tokens entrada} & \color{white}\textbf{Tokens salida} & \color{white}\textbf{Costo (USD)} \\
+\midrule
+1 & 43 & 273 & 50,122 & 6,634 & 0.002105 \\
+\rowcolor{filaAlterna}
+2 & 12 & 87 & 15,754 & 2,301 & 0.000662 \\
+3 & 11 & 81 & 14,565 & 2,157 & 0.000612 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Modelos de afinidad}
+\subsection{Calidad}
+Se reportó un $R^2$ de aproximadamente 0.998 en validación y en prueba. Este valor mide la fidelidad del modelo a la fórmula de etiquetado sobre aspirantes sintéticos, no la calidad de la recomendación para personas reales. Es esperable que sea alto: la etiqueta es una función determinista de las mismas variables que recibe el modelo. No se conserva una salida guardada de esa medición y el entrenamiento imprime el MAE, el RMSE y el $R^2$ sin guardarlos. Por esa razón no se reportan aquí los valores por área. El código del repositorio no evalúa la partición de prueba ni usa métricas de ordenamiento (como el NDCG@3 propuesto en el anexo~\ref{anexo:herramientas}).
+
+\subsection{Tiempo y recursos}
+La tabla~\ref{tab:modelos-recursos} presenta las mediciones locales de entrenamiento y tamaño de los modelos. El entrenamiento de las tres áreas llega a un máximo de unos 1.1 GiB de memoria. El modelo del área 1 cargado ocupa unos 665 MiB (1.2 GiB durante la carga), se carga en 3.2 s y predice un aspirante en 57 ms (43 filas). El límite de 256 MiB del manifiesto actual no alcanza ni para entrenar ni para servir.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Tiempo de entrenamiento y tamaño de los modelos}
+\label{tab:modelos-recursos}
+\begin{tabular}{rrrr}
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Área} & \color{white}\textbf{Columnas} & \color{white}\textbf{Entrenamiento (s)} & \color{white}\textbf{Tamaño comprimido (MiB)} \\
+\midrule
+1 & 55 & 93 & 174.5 \\
+\rowcolor{filaAlterna}
+2 & 24 & 6 & 27.3 \\
+3 & 23 & 6 & 24.3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Calidad del conjunto sintético}
+El conjunto del área 3 superó los 14 controles de validación, incluidos la reproducibilidad (mismo resultado en dos corridas), el cumplimiento de la partición 70/15/15 con tolerancia de dos puntos y los mínimos por carrera. Esto asegura la consistencia interna del conjunto. No demuestra que los aspirantes sintéticos representen a los reales. No se conserva la salida guardada de las áreas 1 y 2.
+
+\section{Cumplimiento de requerimientos}
+La tabla~\ref{tab:cumplimiento} compara los requerimientos del diseño con el estado actual del sistema. Los requisitos de interfaz de estilo (tipografía, colores y glassmorfismo) no se cumplieron como se especificó: el sitio adoptó otra identidad visual durante un rediseño. No se verificó el tamaño de texto ni el interlineado.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{xltabular}{\textwidth}{%
+    >{\raggedright\arraybackslash}p{0.13\textwidth}
+    >{\raggedright\arraybackslash}p{0.14\textwidth}
+    >{\raggedright\arraybackslash}X
+}
+\caption{Cumplimiento de los requerimientos del diseño}
+\label{tab:cumplimiento} \\
+\toprule
+\textbf{Requisito} & \textbf{Estado} & \textbf{Evidencia} \\
+\midrule
+\endfirsthead
+\multicolumn{3}{c}{\tablename\ \thetable{} -- Continuación} \\
+\toprule
+\textbf{Requisito} & \textbf{Estado} & \textbf{Evidencia} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\bottomrule
+\endlastfoot
+RIM A & Parcial & Servicios independientes por eventos; falta el constructor de respuesta. \\
+RIM B & Cumple & Monorrepositorio con \texttt{Backend}, \texttt{Frontend}, \texttt{DataBase}, \texttt{library} y \texttt{Scripts}. \\
+RIM C & Cumple & Vue 3.5, Nuxt 4 y TypeScript. \\
+RIM D & Cumple & PostgreSQL 17, esquema de 13 tablas. \\
+RIM E & Cumple & Redis con flujos y grupos de consumo. \\
+RIM F & Cumple & FastAPI y Pydantic. \\
+RIM G & Parcial & Dos flujos de GitHub Actions; sin pruebas ni construcción de imágenes. \\
+RIM H & Parcial & Instancia de Cloud SQL y acceso a Artifact Registry; sin servicios desplegados en GKE. \\
+RI I, L, P & No cumple & Se usaron Inter y Bricolage Grotesque, violeta como color primario; efecto de vidrio solo en el encabezado. \\
+RI M, N & Cumple & Navegación secuencial e indicador de etapas. \\
+RI O & Parcial & Hay animaciones; se respeta la preferencia de movimiento reducido. \\
+RI Q, 6.2 & No cumple & No hay pantalla de resultados. \\
+RF 1, 3 & Cumple & Pantalla de inicio y selección de una de tres áreas. \\
+RF 2, 2.2, 2.4 & Parcial & Se captura nombre, correo y edad; el correo se valida con expresión regular; los términos se muestran en un aviso breve. \\
+RNF 2.1 & No cumple & El nombre exige al menos 2 caracteres, sin máximo ni restricción alfabética. \\
+RF 4, RNF 4.1 & Cumple & Calificación de 1 a 5; la justificación es obligatoria con 5. \\
+RF 5, RNF 5.1 & Cumple & Una pregunta por dimensión, con al menos una habilidad y respuesta abierta obligatoria. \\
+RF 6, RNF 6.1 & No cumple & No existe el constructor de respuesta ni el umbral de 50\,\%. \\
+\end{xltabular}
+\endgroup
+
+\section{Cumplimiento de los objetivos específicos}
+La tabla~\ref{tab:objetivos} relaciona cada objetivo específico con su estado. Los objetivos 2 y 3 se cumplen. Los objetivos 1, 4, 5 y 6 se cumplen en parte.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Estado de los objetivos específicos}
+\label{tab:objetivos}
+\begin{tabularx}{\textwidth}{L{0.12\textwidth}L{0.14\textwidth}X}
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Objetivo} & \color{white}\textbf{Estado} & \color{white}\textbf{Evidencia y pendiente} \\
+\midrule
+1 & Parcial & Servicios desacoplados por eventos. Falta unir la cadena completa y entregar el resultado. \\
+\rowcolor{filaAlterna}
+2 & Cumple & Base de datos de 13 tablas con 66 carreras, 26 escuelas y 397 criterios. \\
+3 & Cumple & Extractor con Jev verificado con una evaluación real. \\
+\rowcolor{filaAlterna}
+4 & Parcial & Tres modelos Random Forest entrenados, formulados como regresión de afinidad y sin evaluación con datos reales. \\
+5 & Parcial & Cuatro de cinco etapas; falta la pantalla de resultados. \\
+\rowcolor{filaAlterna}
+6 & Parcial & Validación de credenciales y publicación de la biblioteca; faltan pruebas, imágenes y despliegue. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Limitaciones}
+\begin{itemize}
+    \item \textbf{Etiquetas sintéticas.} Las etiquetas provienen de una fórmula, no de juicios de expertos ni de trayectorias reales. Las métricas del modelo miden su ajuste a esa fórmula.
+    \item \textbf{Sin evaluación con aspirantes.} Aún no se mide la pertinencia de las recomendaciones, el orden de las carreras ni la latencia de extremo a extremo.
+    \item \textbf{Entrega ``como máximo una vez''.} Si el extractor falla después de leer un evento, la evaluación se pierde.
+    \item \textbf{Seguridad.} La API no tiene autenticación y el extractor guarda las respuestas libres en archivos de registro. Son datos personales y requieren una política de retención.
+    \item \textbf{Dependencia de un servicio externo.} El extractor requiere conexión con Jev. Una caída del servicio detiene el procesamiento.
+\end{itemize}
+
 \endinput
+
+

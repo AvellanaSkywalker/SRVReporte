@@ -1,14 +1,255 @@
-\chapter{Desarrollo de sistema}
-\section{Extracción e Inserción de datos}
-\subsection{Configuración de áreas, escuelas, carreras y habilidades}
-\subsection{Conjunto de entrenamiento de modelos}
-\section{Desarrollo de modelos (microservicios)}
-\section{Implementación infraestructura}
+﻿\chapter{Desarrollo del sistema}
+Este capítulo describe cómo se construyó cada componente del diseño: la base de conocimiento, el conjunto de entrenamiento, los servicios, el sitio web y la infraestructura. También indica qué partes quedaron implementadas y cuáles siguen pendientes. Las cifras provienen del repositorio del proyecto (rama \texttt{test/jev}, 24 de octubre de 2026).
+
+\section{Alcance de la implementación}
+La tabla~\ref{tab:estado-impl} resume el estado de cada componente. El extractor, el modelo de afinidad, la base de datos y el cuestionario web están implementados. La cadena de eventos no está unida de extremo a extremo: el extractor no publica aún el \texttt{ClassifierEvent}, el clasificador no genera predicciones en línea, el constructor de respuesta no existe y el sitio no muestra resultados.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Estado de implementación por componente}
+\label{tab:estado-impl}
+\begin{tabularx}{\textwidth}{L{0.22\textwidth}L{0.17\textwidth}X}
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Componente} & \color{white}\textbf{Estado} & \color{white}\textbf{Detalle} \\
+\midrule
+Base de datos Athena & Implementado & 13 tablas, 3 áreas, 66 carreras, 26 escuelas y 397 criterios. \\
+\rowcolor{filaAlterna}
+Extracción de criterios & Implementado & Pipeline con Gemini 2.5 Pro y carga validada a PostgreSQL. \\
+Conjunto de entrenamiento & Implementado & Generador sintético con 14 controles; salida guardada del área 3. \\
+\rowcolor{filaAlterna}
+API & Parcial & Tres operaciones. No guarda al usuario ni consulta resultados. \\
+Extractor (Jev) & Implementado & Verificado con un evento real. No publica al clasificador. \\
+\rowcolor{filaAlterna}
+Modelos de afinidad & Parcial & Un Random Forest por área, entrenado al arrancar. Sin predicción en línea. \\
+Constructor de respuesta & Pendiente & Solo existen los esquemas de evento. \\
+\rowcolor{filaAlterna}
+Sitio web & Parcial & Cuatro de cinco etapas; sin pantalla de resultados. \\
+CI/CD & Parcial & Valida credenciales y publica la biblioteca compartida. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Extracción e inserción de datos}
+
+\subsection{Corpus curricular y catálogo}
+El corpus se compone de 66 documentos PDF oficiales, uno por carrera de nivel superior del IPN en la Ciudad de México. Cada PDF se convirtió a Markdown con la herramienta \texttt{markitdown} para reducir el número de tokens enviados al modelo de lenguaje.
+
+El catálogo de áreas, carreras y escuelas se capturó en un libro de Excel y un script lo transformó en sentencias SQL. El resultado es el siguiente:
+\begin{itemize}
+    \item 3 áreas de conocimiento.
+    \item 66 carreras: 43 en el área 1, 12 en el área 2 y 11 en el área 3.
+    \item 26 escuelas y 79 relaciones escuela-carrera. Todas las carreras tienen al menos una escuela.
+\end{itemize}
+Cada carrera conserva su objetivo formativo completo, una versión resumida y una pregunta de objetivo, que es la que se presenta al aspirante.
+
+\subsection{Extracción de criterios con un modelo de lenguaje}
+Los criterios se extrajeron con Gemini 2.5 Pro (temperatura 0.2), procesando una carrera por llamada. El \textit{prompt} (anexo~\ref{anexo:extraccion}) exige exactamente un criterio por cada dimensión $R$, $I$, $S$, $E$ y $C$ y, como máximo, uno para $A$. Cada criterio es una habilidad con la forma ``verbo en infinitivo, objeto y contexto'' y un resumen corto. La extracción sigue tres etapas, en orden de prioridad:
+\begin{enumerate}
+    \item \textbf{Perfil:} se extrae del perfil de ingreso y egreso de la carrera. El esquema de respuesta admite un solo criterio por dimensión.
+    \item \textbf{Internet:} si falta una dimensión obligatoria, se busca evidencia en fuentes institucionales y se registra la fuente.
+    \item \textbf{Contingencia:} si aún falta, se usa una plantilla fija por dimensión, como ``Investigar temas de \{área\}''. Esta vía nunca genera la dimensión $A$.
+\end{enumerate}
+Se ejecutaron validaciones automáticas: un criterio por dimensión, resumen más corto que la descripción y consistencia entre cada criterio y su fuente. Los resultados quedan en la tabla~\ref{tab:criterios}. Además de los 331 criterios de perfil, cada carrera tiene un criterio principal que resume su habilidad central, lo que suma 397 criterios.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Criterios extraídos por origen y dimensión}
+\label{tab:criterios}
+\begin{tabularx}{\textwidth}{L{0.30\textwidth}rX}
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Concepto} & \color{white}\textbf{Cantidad} & \color{white}\textbf{Observación} \\
+\midrule
+Criterios de perfil & 331 & Uno por dimensión $R$, $I$, $S$, $E$, $C$ en cada carrera, más uno de $A$. \\
+\rowcolor{filaAlterna}
+\quad Origen perfil & 303 & Extraídos del documento de la carrera. \\
+\quad Origen internet & 26 & Con 26 fuentes registradas. \\
+\rowcolor{filaAlterna}
+\quad Origen contingencia & 2 & Plantilla fija. \\
+Criterios principales & 66 & Uno por carrera. \\
+\rowcolor{filaAlterna}
+\textbf{Total en la base de datos} & \textbf{397} & 331 de perfil y 66 principales. \\
+Cobertura RIASEC & 66 carreras & 64 completas con evidencia y 2 con contingencia. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Carga a la base de datos}
+Un segundo script carga los criterios a PostgreSQL. Antes de insertar valida que haya 66 carreras, 331 criterios de perfil y 66 principales, que no haya claves duplicadas y que cada resumen quepa en 100 caracteres. La carga es idempotente: omite filas idénticas y aborta si encuentra un conflicto. Usa bloqueo de tabla y tiempos límite, y revierte ante cualquier error. Con la opción de confirmación desactivada solo valida, sin escribir.
+
+\section{Conjunto de entrenamiento de modelos}
+Los aspirantes sintéticos se generan con un notebook que calcula la etiqueta con la fórmula del diseño. Sus parámetros son una semilla fija (20261018) y 3,000, 1,500 y 1,500 aspirantes base para las áreas 1, 2 y 3. La tabla~\ref{tab:escenarios} muestra los ocho escenarios y su cuota.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Escenarios de generación de aspirantes sintéticos}
+\label{tab:escenarios}
+\begin{tabularx}{\textwidth}{L{0.14\textwidth}L{0.10\textwidth}X}
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Escenario} & \color{white}\textbf{Cuota} & \color{white}\textbf{Perfil simulado} \\
+\midrule
+A1 & 10\,\% & Calificación máxima, criterio principal completo y cinco dimensiones completas. \\
+\rowcolor{filaAlterna}
+A2 & 15\,\% & Calificación alta y cuatro dimensiones completas. \\
+A3 & 15\,\% & Calificación media y coincidencias parciales. \\
+\rowcolor{filaAlterna}
+A4 & 8\,\% & Calificación alta con poca evidencia (contradicción). \\
+A5 & 8\,\% & Calificación baja con mucha evidencia. \\
+\rowcolor{filaAlterna}
+A6 & 15\,\% & Carrera foco más una o dos carreras extra, por similitud o al azar. \\
+A7 & 24\,\% & Afinidad general con distribución Beta(2, 4). \\
+\rowcolor{filaAlterna}
+A8 & 5\,\% & Sin coincidencias. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Las carreras que no son el foco del aspirante reciben una afinidad basada en su similitud con la carrera foco. La similitud se calcula con TF-IDF y coseno sobre los textos de los criterios.
+
+Con solo estos escenarios, algunas carreras y rangos de $y$ quedan poco representados. Para corregirlo, el generador divide $y$ en 12 bandas (el valor 0, el valor 1 y diez intervalos intermedios) y agrega aspirantes dirigidos hasta cumplir mínimos por carrera: 100 registros en cada banda de $0.2$ a $1.0$ y 20 en cada extremo. El presupuesto adicional es de 150\,\% de los aspirantes base.
+
+Cada aspirante pertenece a una sola partición (70/15/15), definida al crearlo y estratificada por escenario. Un aspirante nunca se deriva de otro, así que no hay fuga entre particiones. El identificador de cada aspirante se deriva de su número con \texttt{uuid5}, lo que hace reproducible el conjunto.
+
+Antes de cargar, el notebook ejecuta 14 controles: integridad del catálogo, 12 casos de prueba de la fórmula, claves únicas, ausencia de huérfanos, escalas válidas, etiquetas recalculadas, monotonía de la fórmula, cuotas, partición 70/15/15, mínimos por carrera y reproducibilidad. La carga usa \texttt{COPY} por lotes dentro de una transacción. La salida guardada corresponde al área 3 (tabla~\ref{tab:dataset-area3}) y todos los controles resultaron correctos.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Conjunto sintético generado para el área 3}
+\label{tab:dataset-area3}
+\begin{tabular}{lr}
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Concepto} & \color{white}\textbf{Cantidad} \\
+\midrule
+Aspirantes de entrenamiento & 1,662 \\
+\rowcolor{filaAlterna}
+Aspirantes de validación & 354 \\
+Aspirantes de prueba & 361 \\
+\rowcolor{filaAlterna}
+\textbf{Total de aspirantes} & \textbf{2,377} \\
+Filas en \texttt{puntaje\_objetivo} y \texttt{resultados} & 26,147 \\
+\rowcolor{filaAlterna}
+Filas en \texttt{usuario\_criterio} & 156,882 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Desarrollo de los servicios}
+Los servicios están escritos en Python 3.14 con FastAPI 0.150, Pydantic 2.13, SQLAlchemy 2.1 y Redis 8.1. Comparten una biblioteca interna, \texttt{kinasis\_library} (versión 1.0.9, publicada en PyPI), con los esquemas de eventos, la conexión a PostgreSQL y el cliente de Redis.
+
+\subsection{Bus de eventos}
+El cliente de Redis usa flujos con grupos de consumo. El productor serializa el evento a JSON con un campo de formato y lo agrega al flujo. El consumidor crea el grupo si no existe, lee un mensaje y lo confirma al leerlo. Con esta confirmación anticipada un evento fallido no se reentrega, es decir, la entrega es de ``como máximo una vez''. Es una limitación que se retoma en las conclusiones.
+
+\subsection{API}
+La API tiene tres operaciones (tabla~\ref{tab:endpoints}). Sus nombres difieren de los del diseño porque se simplificaron durante la implementación.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Operaciones de la API}
+\label{tab:endpoints}
+\begin{tabularx}{\textwidth}{L{0.09\textwidth}L{0.20\textwidth}L{0.27\textwidth}X}
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Método} & \color{white}\textbf{Ruta} & \color{white}\textbf{Equivale en diseño} & \color{white}\textbf{Función} \\
+\midrule
+GET & \texttt{/get\_areas} & \texttt{/areas} & Lista las áreas. \\
+\rowcolor{filaAlterna}
+GET & \texttt{/\{area\_id\}} & \texttt{/info\_area} & Devuelve los objetivos y las seis preguntas RIASEC del área. \\
+POST & \texttt{/save-user} & \texttt{/respuestas\_usuario} & Recibe las respuestas, genera el UUID y publica el \texttt{ExtractorEvent}. \\
+\rowcolor{filaAlterna}
+--- & No existe & \texttt{/mostrar\_resultado} & Consulta de resultados. Pendiente. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Al recibir las respuestas, la API genera un UUID con el prefijo \texttt{USER-}, convierte cada calificación de 1 a 5 en un valor entre 0.2 y 1.0 y publica el evento en el flujo del extractor. Responde de inmediato con el UUID. Las limitaciones actuales son tres: la inserción del usuario en la base de datos está desactivada, el identificador numérico del usuario en el evento es un valor aleatorio provisional y la API no tiene autenticación. La política de CORS solo admite el origen local del sitio. En el servidor solo se valida que la calificación esté entre 1 y 5; el resto de las validaciones se hacen en el sitio.
+
+\subsection{Extractor}
+El extractor es un proceso que consume el flujo del extractor y consulta a Jev~\cite{JevAPI2026}, un modelo hospedado de TypeSafe AI que no genera texto: recibe un estado y preguntas tipadas y devuelve decisiones estructuradas. Se eligió porque el sistema solo necesita puntuaciones y valores sí/no, y porque responde a todas las preguntas en una sola llamada.
+
+Para cada evaluación el extractor construye un estado con tres partes: los criterios de las carreras con justificación, los criterios de cada dimensión y las respuestas abiertas del aspirante. Luego agrega tres tipos de preguntas:
+\begin{itemize}
+    \item \textbf{Coincidencia de objetivo:} puntuación de qué tan bien la justificación de una carrera respalda su criterio.
+    \item \textbf{Coincidencia de dimensión:} puntuación de qué tan bien la respuesta abierta respalda cada criterio de la dimensión.
+    \item \textbf{Repetición:} valor sí/no para cada criterio marcado como prioritario, que indica si el aspirante lo menciona de forma explícita.
+\end{itemize}
+Las puntuaciones usan seis niveles (0, 20, 40, 60, 80 y 100). Al convertir la respuesta, un valor fuera de rango o no numérico produce un error, no un cero. De los criterios no prioritarios solo se conservan los que alcanzan 60 o más. Un evento real del área 1 generó 259 preguntas (215 de puntuación y 44 de repetición) en una sola llamada. Los eventos inválidos o fallidos se guardan en archivos de error para no detener el proceso.
+
+\subsection{Clasificador}
+El clasificador entrena un \texttt{RandomForestRegressor} de scikit-learn~\cite{Pedregosa2011} por área con los hiperparámetros de la tabla~\ref{tab:hiperparametros}. Los demás parámetros conservan el valor por defecto de scikit-learn, por ejemplo, profundidad sin límite. El entrenamiento usa a los aspirantes de entrenamiento y valida con los de validación. Al terminar calcula el error absoluto medio (MAE), la raíz del error cuadrático medio (RMSE), el coeficiente de determinación ($R^2$), el MAE para etiquetas de 0.5 o más y el MAE por carrera. Las predicciones se recortan al intervalo $[0, 1]$.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Configuración de los modelos de afinidad}
+\label{tab:hiperparametros}
+\begin{tabularx}{0.80\textwidth}{L{0.40\textwidth}X}
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Parámetro} & \color{white}\textbf{Valor} \\
+\midrule
+Algoritmo & \texttt{RandomForestRegressor} (scikit-learn 1.9.1) \\
+\rowcolor{filaAlterna}
+\texttt{n\_estimators} & 300 \\
+\texttt{min\_samples\_leaf} & 5 \\
+\rowcolor{filaAlterna}
+\texttt{random\_state} & 42 \\
+Columnas de entrada & 55 (área 1), 24 (área 2), 23 (área 3) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+El servicio entrena los tres modelos al arrancar y los mantiene en memoria. La función que atiende un \texttt{ClassifierEvent} solo selecciona el modelo del área y no genera aún la predicción. Falta convertir la salida del extractor al formato de entrada del modelo. Para esto se reutilizará la misma función de construcción de variables del entrenamiento, y las reglas de conversión de coincidencia y repeticiones ya están definidas.
+
+\section{Desarrollo del sitio web}
+El sitio usa Nuxt 4 (4.6.2 instalado), Vue 3.5, Pinia y TypeScript. Tiene cinco etapas, de las cuales cuatro funcionan (figura~\ref{fig:flujo-website}):
+\begin{enumerate}
+    \item \textbf{Introducción:} explica las etapas y aclara que la herramienta no sustituye a un orientador profesional.
+    \item \textbf{Datos personales:} nombre, correo, edad (12 a 100 años), avatar acompañante, área y aceptación de términos.
+    \item \textbf{Objetivos:} calificación de 1 a 5 de cada objetivo, en bloques de seis. Con 5 se exige justificación.
+    \item \textbf{RIASEC:} una dimensión a la vez, con hasta 11 habilidades por dimensión y una respuesta abierta obligatoria. El límite de 11 evita rebasar el máximo de 64,000 tokens por solicitud de Jev.
+    \item \textbf{Resultados:} sin implementar. Al terminar, el sitio guarda el UUID en el navegador y muestra una pantalla de espera animada.
+\end{enumerate}
+El sitio guarda el avance en el almacenamiento local del navegador, para recuperarlo si el aspirante recarga la página. Si ya existe un UUID, redirige a la pantalla de espera para no enviar la evaluación dos veces. La pantalla de espera solo cambia de paso con un temporizador; no consulta al servidor. Respeta la preferencia de movimiento reducido del sistema y marca los avisos con atributos de accesibilidad. La interfaz usa las tipografías Inter y Bricolage Grotesque.
+
+\section{Implementación de infraestructura y despliegue}
+
 \subsection{Despliegue de servicios}
+El backend se empaqueta en una sola imagen Docker (\texttt{python:3.14-slim}) y cada servicio se elige con el argumento de arranque. El sitio tiene su propia imagen de dos etapas con \texttt{node:20-alpine}. En desarrollo, los servicios corren en un clúster K3s local, dentro del espacio de nombres \texttt{dev-athena}. La base de datos de desarrollo se ejecuta con PostgreSQL 17 detrás de un proxy TCP de Nginx. En la nube existe una instancia de Cloud SQL, \texttt{athena-db}, que dos scripts encienden y apagan para reducir costos.
+
+Solo está definido el manifiesto de despliegue del clasificador (una réplica, 128 MiB solicitados y 256 MiB de límite). Mediciones posteriores muestran que este límite es insuficiente (capítulo siguiente). No hay manifiestos para el extractor, la API ni el sitio.
+
 \subsection{Configuración de redes}
-\subsection{Integración y despliegue (CI/CD)}
+En el entorno de desarrollo, los servicios acceden a Redis y PostgreSQL por variables de entorno, con las credenciales en secretos de Kubernetes. No se implementó la red privada virtual ni el balanceador HTTPS del diseño. El proxy de Nginx expone el puerto 5432 sin cifrado ni lista de accesos, por lo que debe restringirse antes de usarse fuera del entorno local.
+
+\subsection{Integración y despliegue continuo (CI/CD)}
+Hay dos flujos de GitHub Actions. El de desarrollo se activa con cada cambio en la rama \texttt{devel}. Ejecuta en un \textit{runner} propio dentro del K3s local, verifica el estado del clúster, autentica en Google Cloud y lista los repositorios de Artifact Registry. Después publica la biblioteca \texttt{kinasis\_library} en PyPI si cambió su archivo de configuración. El de producción, activado por la rama \texttt{main}, solo valida la autenticación en Google Cloud.
+
+Todavía no se automatizan las pruebas, la construcción y publicación de las imágenes ni la aplicación de los manifiestos. El objetivo~6 se cumple de forma parcial.
+
 \section{Pruebas de desarrollo}
-\subsection{Pruebas de integración de módulos}
+
 \subsection{Pruebas unitarias}
-%%%%%%fin del archivo
-\endinput 
+El backend tiene tres archivos de pruebas con \texttt{pytest}, con 10 funciones que se expanden a 12 casos. Cubren:
+\begin{itemize}
+    \item El contrato de la API: forma de la respuesta del área, errores 404, lista de áreas, conversión de calificaciones y publicación del evento en el flujo correcto.
+    \item La construcción de preguntas para Jev: conservación de criterios, niveles de puntuación, conversión a porcentaje y umbral de 60.
+    \item El rechazo de respuestas inválidas de Jev: rechazo explícito del modelo, puntuación fuera de rango y valor no numérico.
+\end{itemize}
+Las pruebas utilizan una base de datos SQLite en memoria y un transporte HTTP simulado, por lo que no dependen de servicios externos. No hay pruebas del clasificador, del generador ni de Redis.
+
+El sitio web tiene pruebas con Vitest que cubren el contrato de la API, el flujo de evaluación (respuestas abiertas obligatorias, envío sin duplicados y redirección con evaluación pendiente), la sesión, el contraste de los temas y varios componentes. Los resultados se reportan en el capítulo de pruebas.
+
+\subsection{Pruebas de integración de módulos}
+La integración se verificó de forma manual y solo para el tramo sitio, API y extractor. Se envió una evaluación real del área 1 desde el sitio, la API publicó el evento y el extractor lo consumió y procesó. No existen pruebas automatizadas que recorran el bus de eventos, ni se ha integrado el tramo del clasificador.
+
+\endinput
+
+

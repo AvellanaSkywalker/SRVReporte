@@ -1,20 +1,15 @@
-\chapter{Marco teórico}
-Este capítulo presenta la metodología utilizada para la gestión y desarrollo del proyecto. Se describen las prácticas de 
-planificación y seguimiento, la metodología de desarrollo de software adoptada y los instrumentos de recolección de datos 
-empleados para identificar las habilidades de los estudiantes. Estos elementos constituyen la base para el diseño, 
-implementación y evaluación de la solución propuesta.
+﻿\chapter{Marco metodológico y tecnológico}
+Este capítulo describe cómo se organizó el proyecto y con qué tecnologías se construyó. Presenta la planeación por bloques de trabajo, las tecnologías utilizadas y la comparación de alternativas que sustenta cada elección.
 
-\section{Marco metodológico}
-La organización del proyecto se apoyará principalmente en Kanban, ya que enfoque permite conocer el estado de cada tarea, 
-controlar el progreso del proyecto y optimizar la distribución del trabajo. Asimismo, se incorporan prácticas ágiles de 
-Scrum, con el propósito de promover un desarrollo ordenado e incremental.
+\section{Gestión del proyecto}
+El proyecto se organizó con Kanban, que permite conocer el estado de cada tarea, controlar el avance y distribuir el trabajo entre los integrantes. Se complementó con prácticas ágiles de Scrum para entregar el desarrollo de forma incremental.
 
 \textbf{Bloques de trabajo:} 
 \begin{itemize}
-    \item \textbf{Definición del proyecto:} Proporcionará las bases para los requerimientos.
-    \item \textbf{Análisis, diseño y arquitectura:} Consolidará su especificación y la solución técnica correspondiente.
-    \item \textbf{Desarrollo e implementación:} Construcción e integración de los componentes.
-    \item \textbf{Pruebas y resultados:} Evaluación de componentes del sistema.
+    \item \textbf{Definición del proyecto:} establece las bases de los requerimientos.
+    \item \textbf{Análisis, diseño y arquitectura:} especifica los requerimientos y la solución técnica.
+    \item \textbf{Desarrollo e implementación:} construye e integra los componentes.
+    \item \textbf{Pruebas y resultados:} evalúa los componentes del sistema.
 \end{itemize}
 
 \begin{table}[ht] 
@@ -42,7 +37,7 @@ Scrum, con el propósito de promover un desarrollo ordenado e incremental.
     Especificación de requerimientos, diseño de interfaces y estructuras de datos, definición de servicios, contratos de comunicación y procedimientos de análisis. \\ 
     Desarrollo e implementación & 
     27 de septiembre al 19 de octubre & 
-    Preparación de datos, desarrollo e integración de servicios, ajuste del modelo de lenguaje, implementación de RAG, entrenamiento y selección del clasificador, construcción de la plataforma y configuración del despliegue. \\
+    Extracción de criterios curriculares, generación del conjunto sintético, desarrollo del extractor con Jev, entrenamiento de los modelos de afinidad, construcción de la plataforma web y configuración del despliegue. \\
     Pruebas y resultados & 
     20 al 31 de octubre & 
     Ejecución de pruebas, evaluación de modelos y recomendaciones, corrección de incidencias y análisis de resultados. \\ 
@@ -50,11 +45,7 @@ Scrum, con el propósito de promover un desarrollo ordenado e incremental.
 \end{tabularx} 
 \end{table}
 
-Esta organización permitirá coordinar las actividades necesarias para alcanzar la conclusión del sistema el 31 de octubre y efectuar su 
-entrega el 1 de noviembre.
-
-Con el propósito de asegurar el cumplimiento de los objetivos del proyecto, se realizarán verificaciones periódicas durante el 
-desarrollo.
+La planeación fija el cierre del sistema el 31 de octubre y su entrega el 1 de noviembre. Durante el desarrollo se hicieron verificaciones periódicas del avance contra los objetivos.
 
 \section{Marco tecnológico}
 
@@ -80,30 +71,219 @@ desarrollo.
 \endfoot
 \bottomrule
 \endlastfoot
-\textbf{PostgreSQL} & Sistema gestor de bases de datos relacional de código abierto, conocido por su fiabilidad, integridad de datos y extensibilidad. & Permite mantener la integridad de los datos. Además, su capacidad para manejar extensiones, como \texttt{pgvector}, lo hace adecuado para almacenar y consultar eficientemente bases de conocimiento. \\
+\textbf{PostgreSQL} & Sistema gestor de bases de datos relacional de código abierto, conocido por su fiabilidad, integridad de datos y extensibilidad. & Mantiene la integridad de los datos mediante llaves foráneas y transacciones. Aloja el catálogo de carreras, los criterios y los datos de entrenamiento (versión 17 en desarrollo). \\
 \rowcolor{filaAlterna}
-\textbf{Python} & Lenguaje de programación de propósito general. & Constituye el núcleo lógico del backend y facilita la conexión entre la lógica de negocio y los modelos de inteligencia artificial. Es una de las opciones mejor adaptadas para el desarrollo de soluciones de aprendizaje automático. \\
+\textbf{Python} & Lenguaje de programación de propósito general. & Es el lenguaje de todo el backend (versión 3.14). Conecta la lógica de negocio con los modelos de aprendizaje automático. \\
 \textbf{FastAPI} & Framework web moderno, rápido y de alto rendimiento para construir API con Python. & Su naturaleza asíncrona lo hace adecuado para el módulo de API. Permite gestionar eficientemente múltiples solicitudes concurrentes y coordinar las llamadas a los microservicios sin bloquear el sistema. \\
 \rowcolor{filaAlterna}
-\textbf{Jev} & Modelo de inteligencia artificial especializado en decisiones tipadas (\textit{System 1 Decision Model} de TypeSafe AI), que evalúa entradas de texto y devuelve clasificaciones estructuradas con probabilidades calibradas en milisegundos, en lugar de generar texto libre. & Se encarga del análisis de las respuestas abiertas del aspirante. Permite evaluar el texto libre para detectar competencias adicionales no seleccionadas en las preguntas cerradas y ponderar, mediante porcentajes de coincidencia, las habilidades del catálogo RIASEC. \\
+\textbf{Jev} & Modelo de inteligencia artificial especializado en decisiones tipadas (\textit{System 1 Decision Model} de TypeSafe AI), que evalúa entradas de texto y devuelve clasificaciones estructuradas con probabilidades calibradas en milisegundos, en lugar de generar texto libre. & Analiza las respuestas abiertas del aspirante. Califica, en una sola llamada, qué tan bien el texto respalda cada criterio del catálogo RIASEC y detecta criterios que el aspirante no marcó~\cite{JevAPI2026}. \\
 \textbf{Pydantic} & Biblioteca de Python orientada a la validación y serialización de datos, basada en anotaciones de tipos. & Permite validar estrictamente la estructura de los objetos JSON que circulan entre el sitio web, la API, el orquestador Redis y los microservicios. \\
 \rowcolor{filaAlterna}
 \textbf{Pandas y NumPy} & Bibliotecas fundamentales de Python para la manipulación estructurada de datos y el cálculo numérico de alto rendimiento. & Son indispensables para preprocesar, limpiar y transformar las respuestas antes de alimentar los modelos de clasificación predictiva. \\
-\textbf{Algoritmo Random Forest} & Algoritmo de aprendizaje automático supervisado basado en el ensamble de múltiples árboles de decisión mediante \textit{bagging}, reconocido por su precisión en problemas de clasificación multiclase y su resistencia al sobreajuste. & Constituye la base de los tres modelos clasificadores especializados por área de conocimiento del IPN: Ingeniería y Ciencias Físico-Matemáticas, Ciencias Médico-Biológicas y Ciencias Sociales y Administrativas. Su función consiste en correlacionar las habilidades ponderadas del aspirante con las carreras disponibles en la Ciudad de México. \\
+\textbf{Algoritmo Random Forest} & Algoritmo de aprendizaje automático supervisado basado en el ensamble de múltiples árboles de decisión mediante \textit{bagging}, reconocido por su precisión en problemas de clasificación multiclase y su resistencia al sobreajuste. & Es la base de los tres modelos de afinidad, uno por área del IPN: Ingeniería y Ciencias Físico-Matemáticas, Ciencias Médico-Biológicas y Ciencias Sociales y Administrativas~\cite{Breiman2001}. Se usa la implementación de scikit-learn~\cite{Pedregosa2011}. Cada modelo relaciona las coincidencias del aspirante con la afinidad de cada carrera del área. \\
 \rowcolor{filaAlterna}
-\textbf{Redis} & Estructura de almacenamiento de datos en memoria, utilizada comúnmente como base de datos y sistema de caché. & Actúa como orquestador del sistema. Mediante un formato de eventos JSON, Redis administra las colas de mensajes de manera asíncrona y asegura un flujo de datos desacoplado y de baja latencia. \\
+\textbf{Redis} & Estructura de almacenamiento de datos en memoria, utilizada comúnmente como base de datos y sistema de caché. & Actúa como orquestador del sistema. Con flujos (\textit{streams}) y grupos de consumo~\cite{RedisStreams}, entrega a cada servicio los eventos JSON de forma asíncrona y desacoplada. \\
 \textbf{HTML, CSS y JavaScript} & Tecnologías fundamentales de la web: HTML estructura el contenido, CSS define su presentación visual y JavaScript incorpora interactividad. & HTML proporciona la estructura semántica de los cuestionarios, CSS permite implementar un diseño responsivo para dispositivos móviles y equipos de escritorio, y JavaScript captura las respuestas e interactúa con la API. \\
 \rowcolor{filaAlterna}
 \textbf{Vue.js} & Framework progresivo de JavaScript utilizado para construir interfaces de usuario web. & Permite desarrollar interfaces interactivas y reactivas, con una curva de aprendizaje accesible. Se utiliza para proporcionar una experiencia fluida, rápida y moderna durante la resolución de los cuestionarios. \\
-\textbf{Nuxt.js} & Framework construido sobre Vue.js que incorpora capacidades como renderizado del lado del servidor (\textit{Server-Side Rendering}, SSR) y generación de sitios estáticos. & Optimiza el tiempo de carga del frontend, mejora la estructura de enrutamiento y permite que el portal sea indexable y escale eficientemente al comunicarse con la API. \\
+\textbf{Nuxt.js} & Framework construido sobre Vue.js que incorpora renderizado del lado del servidor (\textit{Server-Side Rendering}, SSR), enrutamiento por archivos y generación de sitios estáticos. & Estructura las rutas del cuestionario y optimiza el tiempo de carga (versión 4). \\
 \rowcolor{filaAlterna}
 \textbf{GitHub} & Plataforma de desarrollo colaborativo y alojamiento de repositorios en la nube, basada en el sistema de control de versiones distribuido Git. & Centraliza el código fuente de los servicios modulares, los scripts de entrenamiento de los modelos y la plataforma web. Facilita el control de versiones, la gestión de ramas y la trazabilidad del desarrollo. \\
 \textbf{GitHub Actions} & Plataforma de integración y despliegue continuo (CI/CD) integrada en GitHub, que permite automatizar flujos de compilación, pruebas y entrega a partir de eventos generados en el repositorio. & Automatiza la ejecución de pruebas de software, el empaquetamiento de contenedores Docker y la actualización continua de los módulos y modelos clasificadores ante cada cambio integrado en el repositorio. \\
 \rowcolor{filaAlterna}
 \textbf{Docker} & Plataforma utilizada para empaquetar aplicaciones y sus dependencias en contenedores ligeros y portátiles. & Garantiza la estandarización del entorno. Al empaquetar cada microservicio, permite que funcione de manera consistente tanto durante el desarrollo como en el despliegue dentro de un clúster de Kubernetes. \\
-\textbf{Google Cloud} & Plataforma de computación en la nube que proporciona infraestructura escalable, ejecución administrada de contenedores, redes seguras y almacenamiento de alta disponibilidad. & Proporciona la infraestructura operativa donde se alojan y ejecutan los contenedores de los servicios modulares, la base de datos y la plataforma web. Esto permite mantener la escalabilidad y disponibilidad continua del sistema para los aspirantes. \\
+\textbf{Google Cloud} & Plataforma de computación en la nube que proporciona infraestructura escalable, ejecución administrada de contenedores, redes seguras y almacenamiento de alta disponibilidad. & Proporciona la infraestructura de nube: Cloud SQL para la base de datos, Artifact Registry para las imágenes y, en el diseño objetivo, Kubernetes Engine y Memorystore para los servicios. \\
+\rowcolor{filaAlterna}
+\textbf{Gemini 2.5 Pro} & Modelo de lenguaje de Google con salida estructurada en JSON. & Extrajo los criterios de las 66 carreras a partir de sus documentos. Se usó una sola vez, como herramienta de preparación de datos. \\
+\textbf{scikit-learn} & Biblioteca de aprendizaje automático de Python. & Entrena los modelos Random Forest y calcula las métricas de validación. \\
 \end{longtable}
 
 \section{Comparativa tecnológica}
+En esta sección se fundamenta la selección de las herramientas, lenguajes, algoritmos y plataformas que integran la solución propuesta. La arquitectura del sistema demanda el desacoplamiento de servicios, el procesamiento concurrente de solicitudes, la extracción de características textuales y la ejecución de modelos de aprendizaje automático supervisado. Para asegurar la robustez, mantenibilidad y escalabilidad del proyecto, se realizó una evaluación sistemática de alternativas tecnológicas en los componentes críticos de la arquitectura.
+
+\subsection{Lenguajes de programación y frameworks de backend}
+El desarrollo del backend requiere un entorno capaz de orquestar la lógica de negocio, comunicarse de forma asíncrona mediante eventos y ejecutar inferencias sobre modelos de aprendizaje automático. Se compararon tres alternativas principales: Python con FastAPI, Node.js con Express, y Java con Spring Boot.
+
+Python se seleccionó como lenguaje principal debido a su posición estándar en ciencia de datos y aprendizaje automático, lo que permite integrar directamente bibliotecas como Scikit-Learn, NumPy y Pandas sin necesidad de puentes entre lenguajes. Dentro del ecosistema Python, FastAPI ofrece ventajas sustanciales frente a frameworks tradicionales como Flask o Django: está construido sobre estándares abiertos (ASGI, Starlette y Pydantic), proporciona soporte nativo para programación asíncrona (\texttt{async/await}), realiza validación automática y estricta de esquemas de datos con tipado estático, y genera documentación interactiva OpenAPI de forma nativa. La tabla~\ref{tab:comp-backend} resume la comparativa entre los entornos evaluados.
+
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Comparativa de tecnologías de backend}
+\label{tab:comp-backend}
+\begin{tabularx}{\textwidth}{L{0.18\textwidth}XXXX}
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Criterio} & \color{white}\textbf{FastAPI (Python)} & \color{white}\textbf{Flask (Python)} & \color{white}\textbf{Express (Node.js)} & \color{white}\textbf{Spring Boot (Java)} \\
+\midrule
+Rendimiento asíncrono & Muy alto (ASGI / uvloop) & Bajo a medio (WSGI sincrónico) & Alto (Event loop monocatenario) & Muy alto (multihilo nativo) \\
+\rowcolor{filaAlterna}
+Integración con ML & Nativa y directa & Nativa y directa & Compleja (requiere microservicio Python) & Compleja (requiere bindings JNI o gRPC) \\
+Tipado y validación & Nativo vía Pydantic & Manual o con extensiones & Débil (requiere TypeScript + validadores) & Fuerte (estricto en tiempo de compilación) \\
+\rowcolor{filaAlterna}
+Consumo de memoria & Bajo & Bajo & Medio & Alto (JVM) \\
+Velocidad de desarrollo & Muy rápida & Rápida & Rápida & Media a lenta \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Algoritmos de aprendizaje supervisado}
+El núcleo predictivo estima qué tan afín es el aspirante a cada programa del área elegida. Se compararon cuatro algoritmos supervisados: Random Forest, Perceptrón Multicapa (MLP), Máquinas de Vectores de Soporte (SVM) y Regresión Logística.
+
+Se seleccionó Random Forest por tres razones. Primero, el ensamble de árboles por agregación (\textit{bagging}) reduce el sobreajuste. Segundo, funciona bien con datos tabulares que mezclan variables continuas y binarias, como las del modelo. Tercero, permite calcular la importancia de las variables, lo que facilita explicar el resultado. Las redes neuronales requieren más datos y un ajuste más delicado de hiperparámetros; Random Forest se comporta de forma estable con pocos hiperparámetros y sin GPU. Además, la salida requerida es un índice continuo de afinidad por carrera, que Random Forest produce de forma nativa en su versión de regresión. La tabla~\ref{tab:comp-algoritmos} resume la comparación.
+
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Comparativa de algoritmos de aprendizaje supervisado}
+\label{tab:comp-algoritmos}
+\begin{tabularx}{\textwidth}{L{0.20\textwidth}XXXX}
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Criterio} & \color{white}\textbf{Random Forest} & \color{white}\textbf{Red Neuronal (MLP)} & \color{white}\textbf{SVM (Kernel RBF)} & \color{white}\textbf{Regresión Logística} \\
+\midrule
+Salida continua (regresión) & Nativa (regresor) & Nativa & Mediante SVR & No aplica (es un clasificador) \\
+\rowcolor{filaAlterna}
+Resistencia a sobreajuste & Alta (ensamble bagging) & Media (requiere regularización y dropout) & Media a alta & Alta (con penalización L1/L2) \\
+Interpretabilidad & Alta (importancia de características) & Baja (modelo de caja negra) & Baja en espacios transformados & Alta (pesos y coeficientes) \\
+\rowcolor{filaAlterna}
+Complejidad de ajuste & Baja (pocos hiperparámetros críticos) & Alta (arquitectura, capas, learning rate) & Media (costo de regularización e hiperparámetros) & Muy baja \\
+Costo computacional & Bajo en inferencia & Medio a alto & Alto con muestras masivas & Muy bajo \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Sistemas gestores de bases de datos y persistencia}
+Los datos del sistema son relacionales: áreas, carreras, escuelas, criterios, usuarios y resultados. Se compararon PostgreSQL, MySQL y MongoDB, y se incluyó la búsqueda vectorial como criterio porque el diseño inicial consideraba comparar textos por similitud semántica.
+
+Se seleccionó PostgreSQL por su cumplimiento del estándar SQL y de las propiedades ACID, que garantizan la integridad de los datos normalizados, y por su soporte de extensiones. Al final, la comparación de textos se delegó a Jev y no se usó búsqueda vectorial, por lo que la extensión \texttt{pgvector} no se instaló. Queda disponible si se decide comparar textos por similitud semántica en el futuro. La tabla~\ref{tab:comp-bd} resume la evaluación.
+
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Comparativa de sistemas de bases de datos}
+\label{tab:comp-bd}
+\begin{tabularx}{\textwidth}{L{0.22\textwidth}XXX}
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Criterio} & \color{white}\textbf{PostgreSQL} & \color{white}\textbf{MySQL} & \color{white}\textbf{MongoDB} \\
+\midrule
+Modelo de datos & Relacional objeto-relacional & Relacional clásico & Documental (NoSQL BSON) \\
+\rowcolor{filaAlterna}
+Integridad referencial & Estricta (ACID nativo) & Estricta (motor InnoDB) & Eventual por documento \\
+Búsqueda vectorial & Disponible con la extensión \texttt{pgvector} (no usada) & Limitada / No nativa & Requiere servicio Atlas Search \\
+\rowcolor{filaAlterna}
+Extensibilidad y tipos & Muy alta (soporte JSONB, arrays, vectores) & Media (JSON básico) & Alta en estructuras no tipadas \\
+Sobrecarga de gestión & Baja (una sola instancia) & Media & Alta si se requiere motor vectorial externo \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Mecanismos de orquestación y mensajería orientada a eventos}
+El flujo operativo entre la interfaz web, el extractor de habilidades por PLN y el clasificador supervisado se diseñó bajo un patrón orientado a eventos para evitar bloqueos por operaciones síncronas de cómputo intensivo. Se evaluaron Redis, RabbitMQ y Apache Kafka.
+
+Se seleccionó Redis como bus de eventos. Al almacenar en memoria, ofrece latencias submilisegundo, y sus flujos con grupos de consumo~\cite{RedisStreams} bastan para repartir eventos entre servicios. Kafka está orientado a grandes volúmenes de eventos distribuidos y exige operar un clúster. RabbitMQ añade configuración de enrutamiento que este sistema no necesita. Redis tiene una huella de memoria pequeña y es sencillo de ejecutar en contenedores. Su limitación es la durabilidad: con la confirmación al leer, un evento que falla durante su procesamiento no se reentrega. La tabla~\ref{tab:comp-mensajeria} expone la comparación.
+
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Comparativa de sistemas de orquestación y mensajería}
+\label{tab:comp-mensajeria}
+\begin{tabularx}{\textwidth}{L{0.22\textwidth}XXX}
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Criterio} & \color{white}\textbf{Redis (Streams / Pub-Sub)} & \color{white}\textbf{RabbitMQ} & \color{white}\textbf{Apache Kafka} \\
+\midrule
+Almacenamiento primario & En memoria (RAM) & Disco y memoria & Disco distribuido \\
+\rowcolor{filaAlterna}
+Latencia de mensaje & Submilisegundo (< 1 ms) & Baja (5 a 15 ms) & Media (10 a 30 ms) \\
+Complejidad operativa & Mínima & Media (requiere Erlang runtime) & Alta (requiere clúster y Zookeeper/KRaft) \\
+\rowcolor{filaAlterna}
+Consumo de recursos & Muy bajo & Medio & Alto \\
+Idoneidad del caso & Óptima para colas de microservicios & Adecuada para enrutamiento complejo & Diseñada para big data y analítica en tiempo real \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Tecnologías de interfaz de usuario y arquitectura web}
+La captura de datos vocacionales y la presentación de resultados demandan una interfaz web responsiva, accesible y de alta fluidez, orientada a evitar la fatiga y distracción del aspirante durante la aplicación del cuestionario. Se compararon Vue.js (con Nuxt.js), React (con Next.js) y Angular.
+
+Se seleccionó Vue.js con Nuxt.js por su curva de aprendizaje accesible, su reactividad declarativa y sus componentes de un solo archivo. Nuxt aporta renderizado del lado del servidor y rutas automáticas por archivo, lo que mejora el tiempo de primera carga y simplifica el consumo de la API. La tabla~\ref{tab:comp-frontend} presenta la comparación.
+
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Comparativa de tecnologías de desarrollo frontend}
+\label{tab:comp-frontend}
+\begin{tabularx}{\textwidth}{L{0.22\textwidth}XXX}
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Criterio} & \color{white}\textbf{Vue.js + Nuxt.js} & \color{white}\textbf{React + Next.js} & \color{white}\textbf{Angular} \\
+\midrule
+Curva de aprendizaje & Progresiva y accesible & Media (gestión de estado compleja) & Empinada (framework monolítico estricto) \\
+\rowcolor{filaAlterna}
+Capacidades SSR & Nativas e integradas vía Nuxt & Nativas e integradas vía Next & Requiere Angular Universal \\
+Reactividad & Fina y automática (Proxy-based) & Basada en estados inmutables y hooks & Basada en Zones y Signals \\
+\rowcolor{filaAlterna}
+Tamaño del bundle & Ligero & Medio & Pesado \\
+Estructura de componentes & Single File Components (.vue) & JSX / TSX & Clases TypeScript con decoradores \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Infraestructura de despliegue, contenerización e integración continua}
+Para garantizar la reproducibilidad y el despliegue confiable de los microservicios, se requería una infraestructura desacoplada, estandarizada y automatizada. Se evaluó la combinación de Docker, Google Cloud Platform (GCP) y GitHub Actions frente a esquemas tradicionales en servidores locales y frente a proveedores alternativos como Amazon Web Services (AWS).
+
+Docker empaqueta cada servicio con sus dependencias, de modo que el entorno de desarrollo sea el mismo que el de despliegue. Se eligió Google Cloud por su integración con Kubernetes (Google Kubernetes Engine), su base de datos administrada (Cloud SQL) y su registro de imágenes (Artifact Registry). GitHub Actions automatiza el flujo de CI/CD desde el mismo repositorio donde se aloja el código. En desarrollo se usó un clúster K3s local con un \textit{runner} propio de GitHub Actions, que evita el costo de un clúster en la nube durante las pruebas. La tabla~\ref{tab:comp-infra} resume la comparación.
+
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Comparativa de infraestructura y despliegue}
+\label{tab:comp-infra}
+\begin{tabularx}{\textwidth}{L{0.22\textwidth}XXX}
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Criterio} & \color{white}\textbf{Docker + GCP + GitHub Actions} & \color{white}\textbf{AWS + Jenkins} & \color{white}\textbf{Servidor dedicado on-premise} \\
+\midrule
+Aislamiento de servicios & Alto (contenedores independientes) & Alto (contenedores / instancias EC2) & Bajo (dependencias compartidas en SO) \\
+\rowcolor{filaAlterna}
+Automatización CI/CD & Integrada en el repositorio & Requiere servidor Jenkins dedicado & Despliegues manuales o scripts SSH \\
+Escalabilidad & Elástica y administrada en la nube & Elástica y administrada en la nube & Fija (limitada por hardware físico) \\
+\rowcolor{filaAlterna}
+Costo de mantenimiento & Reducido (servicios administrados) & Medio a alto & Alto (administración de infraestructura física) \\
+Reproducibilidad & Total (Dockerfiles y manifiestos de red) & Total & Baja (vulnerable a drift de configuración) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Evaluación de coincidencias en texto libre}
+El extractor debe medir qué tan bien una respuesta abierta respalda cada criterio de las carreras. Un aspirante del área 1 puede generar más de 200 comparaciones en una sola evaluación. Se compararon cuatro enfoques: un modelo de decisiones tipadas (Jev), un modelo de lenguaje generativo, representaciones semánticas de oraciones~\cite{Reimers2019SBERT} y TF-IDF con similitud coseno.
+
+Se seleccionó Jev porque devuelve valores tipados (puntuación, opción o sí/no) en lugar de texto, por lo que no requiere analizar la respuesta, y contesta todas las preguntas en una sola llamada~\cite{JevAPI2026}. Eso mantiene el costo en menos de 0.003 USD por evaluación (capítulo de pruebas). Sus desventajas son la dependencia de un servicio externo y el límite de 64,000 tokens por solicitud. La tabla~\ref{tab:comp-texto} resume la comparación cualitativa, elaborada por los autores a partir de la documentación de cada enfoque.
+
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Comparativa de enfoques para evaluar coincidencias en texto libre}
+\label{tab:comp-texto}
+\begin{tabularx}{\textwidth}{L{0.18\textwidth}XXXX}
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Criterio} & \color{white}\textbf{Jev} & \color{white}\textbf{LLM generativo} & \color{white}\textbf{Embeddings} & \color{white}\textbf{TF-IDF} \\
+\midrule
+Tipo de salida & Valores tipados & Texto libre & Similitud coseno & Similitud coseno \\
+\rowcolor{filaAlterna}
+Procesamiento de la salida & Directo & Requiere análisis y validación & Directo & Directo \\
+Preguntas por llamada & Muchas, en una sola pasada & Una o pocas por instrucción & No aplica & No aplica \\
+\rowcolor{filaAlterna}
+Comprensión de contexto & Alta (modelo de lenguaje) & Alta & Media; requiere validar negaciones y español & Nula (solo vocabulario) \\
+Repetibilidad & Salida acotada a niveles definidos & Puede variar entre ejecuciones & Alta & Alta \\
+\rowcolor{filaAlterna}
+Dependencia externa & Sí (servicio alojado) & Sí & No (modelo local) & No \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \endinput
+

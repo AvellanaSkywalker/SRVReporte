@@ -1,18 +1,44 @@
-\chapter{Anexo 2. Hoja de datos}\label{anexo2}
-\stepcounter{chapter} %instrucción necesaria para cambiar numeración
+\chapter{Evaluación técnica y psicométrica de herramientas e instrumentos de orientación vocacional}\label{anexo:herramientas}
 
-Una ficha técnica, hoja técnica u hoja de datos (datasheet en inglés), también ficha de características u hoja de características, es un documento que resume el funcionamiento y otras características de un componente (por ejemplo, un componente electroóico) o subsistema (por ejemplo, una fuente de alimentación) con el suficiente detalle para ser utilizado por un ingeniero de diseño y diseñar el componente en un sistema.
+Este anexo complementa la revisión del estado del arte mediante un análisis comparativo y psicométrico de los instrumentos tradicionales de orientación vocacional aplicados en México frente a los enfoques computacionales modernos.
 
-Comienza típicamente con una página introductoria que describe el resto del documento, seguido por los listados de componentes específicos, con la información adicional sobre la conectividad de los dispositivos. En caso de que haya código fuente relevante a incluir, se une cerca del extremo del documento o se separa generalmente en otro archivo.
+\section{Diagnóstico psicométrico de instrumentos vocacionales tradicionales}
+En el ámbito de la psicología educativa en México, diversas investigaciones~\cite{GarciaMartinez2021,Vargas2026} han señalado limitaciones estructurales en los instrumentos de evaluación vocacional más extendidos:
+\begin{itemize}
+    \item \textbf{Desfasamiento temporal y tecnológico:} Diversas pruebas psicométricas continúan operando bajo reactivos formulados hace más de dos décadas, diseñados en un contexto analógico que no contempla competencias digitales, pensamiento computacional ni tecnologías interdisciplinarias.
+    \item \textbf{Falta de estandarización en baremos nacionales:} Como documenta Vargas~\cite{Vargas2026}, múltiples baterías estandarizadas en Estados Unidos o Europa fueron traducidas al español sin una renormalización de sus baremos estadísticos con estudiantes mexicanos, introduciendo sesgos derivados de diferencias demográficas y socioeconómicas.
+    \item \textbf{Rigidez en la captura mediante escalas cerradas:} Los cuestionarios cerrados en escalas ordinales de tres a cinco niveles (tipo Likert) inducen respuestas sesgadas por deseabilidad social y saturación homogénea, donde el estudiante tiende a calificar con valores altos múltiples actividades sin manifestar diferenciación real.
+\end{itemize}
 
-Las fichas técnicas no se limitan solo a componentes electrónicos, si no que también se dan en otros campos de la ciencia, como por ejemplo compuestos químicos o alimentos.
+\section{Matriz comparativa de herramientas vocacionales}
+La tabla~\ref{tab:comp-herramientas-vocacionales} presenta una evaluación técnica entre los instrumentos tradicionales de autoinforme (incluyendo el Perfil de Preferencias Profesionales y las baterías psicométricas estándar) y la solución de recomendación inteligente desarrollada en este proyecto.
 
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\caption{Matriz comparativa de herramientas e instrumentos de orientación vocacional}
+\label{tab:comp-herramientas-vocacionales}
+\begin{tabularx}{\textwidth}{L{0.22\textwidth}L{0.24\textwidth}L{0.24\textwidth}X}
+\toprule
+\rowcolor{encabezadoTabla} \color{white}\textbf{Criterio técnico} & \color{white}\textbf{Perfil de Preferencias Profesionales (IPN)} & \color{white}\textbf{Baterías psicométricas (DAT / Hereford)} & \color{white}\textbf{Sistema inteligente propuesto (SRV)} \\
+\midrule
+Tipo de entrada de datos & Cuestionario cerrado (100 reactivos ordinales) & Reactivos psicométricos cerrados y cronometrados & Multimodal: calificaciones, habilidades marcadas y respuestas abiertas \\
+\rowcolor{filaAlterna}
+Procesamiento de texto libre & Inexistente (no procesa lenguaje natural) & Inexistente (puntuación estrictamente numérica) & Extractor semántico con decisiones tipadas (Jev / PLN) \\
+Unidad de resolución / salida & Área macroscópica de conocimiento (6 áreas) & Áreas de aptitud o intereses generales (4 a 6) & Programa académico específico (ranking de 3 carreras) \\
+\rowcolor{filaAlterna}
+Mecanismo de inferencia & Agregación de puntajes por regla estática & Baremos psicométricos tabulados / baremación & Tres modelos supervisados Random Forest por área del IPN \\
+Integración con oferta oficial & Catálogo general ordenado alfabéticamente & Sin vinculación curricular directa & Base de datos normalizada (Athena) con planteles en CDMX \\
+\rowcolor{filaAlterna}
+Métricas de correspondencia & Puntuación total por área sin porcentaje relativo & Rango percentil normativo poblacional & Índice de afinidad por carrera, con umbral de 50\,\% en el diseño \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
+\input{capitulos/analisis_ppp}
 
+\section{Conclusiones de la comparativa}
+El análisis comparativo evidencia que el sistema propuesto no busca competir en el diagnóstico psicológico clínico de la personalidad, sino fungir como un sistema de recomendación curricular basado en datos. Al combinar la formalización tipológica RIASEC con el análisis semántico de texto libre y clasificadores supervisados entrenados sobre programas académicos politécnicos, se supera la brecha de resolución de las herramientas tradicionales, entregando recomendaciones trazables y alineadas con la oferta académica institucional.
 
-\verb+\+bigskip
-
-
-
-%%%%%%fin del archivo
-\endinput 
+\endinput

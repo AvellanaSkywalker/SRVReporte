@@ -1,17 +1,51 @@
-\chapter{Anexo 3 (Anexo título 3)}\label{anexo3}
-\stepcounter{chapter} %instrucción necesaria para cambiar numeración
+\chapter{Metodología de extracción y formalización de criterios curriculares}\label{anexo:extraccion}
 
-Una ficha técnica, hoja técnica u hoja de datos (datasheet en inglés), también ficha de características u hoja de características, es un documento que resume el funcionamiento y otras características de un componente (por ejemplo, un componente electrónico) o subsistema (por ejemplo, una fuente de alimentación) con el suficiente detalle para ser utilizado por un ingeniero de diseño y diseñar el componente en un sistema.
+Este anexo documenta cómo se estructuró la base de conocimiento de la oferta académica del IPN en la Ciudad de México a partir de fuentes oficiales.
 
-Comienza típicamente con una página introductoria que describe el resto del documento, seguido por los listados de componentes específicos, con la información adicional sobre la conectividad de los dispositivos. En caso de que haya código fuente relevante a incluir, se une cerca del extremo del documento o se separa generalmente en otro archivo.
+\section{Corpus curricular de nivel superior del IPN}
+Se reunió un documento oficial por cada carrera de nivel superior que imparte el IPN en la Ciudad de México (66 documentos). De cada uno se procesaron tres componentes:
+\begin{enumerate}
+    \item \textbf{Objetivo general del programa:} define la misión formativa, el campo de aplicación y la orientación disciplinar.
+    \item \textbf{Perfil de ingreso:} especifica los conocimientos previos, aptitudes y disposiciones esperadas en los aspirantes.
+    \item \textbf{Perfil de egreso:} detalla las competencias profesionales, destrezas técnicas y campos laborales del graduado.
+\end{enumerate}
+Los documentos PDF se convirtieron a Markdown antes de enviarlos al modelo de lenguaje, lo que reduce el número de tokens.
 
-Las fichas técnicas no se limitan solo a componentes electrónicos, si no que también se dan en otros campos de la ciencia\index{ciencia}, como por ejemplo compuestos químicos o alimentos.
+\section{Directrices psicológicas para la formalización RIASEC}
+La Licenciada en Psicología Paola Alejandra Luna Cabrera estableció las reglas de correspondencia entre los descriptores curriculares y la taxonomía RIASEC~\cite{Holland1997}. Los criterios generados por el modelo de lenguaje se revisaron con esas reglas (esquema \textit{Human-in-the-Loop}):
+\begin{itemize}
+    \item \textbf{Realista ($R$):} manipulación de instrumentos y maquinaria, diseño mecánico, circuitos físicos, pruebas de laboratorio y actividades operativas.
+    \item \textbf{Investigador ($I$):} habilidades analíticas, resolución matemática, modelado formal, diseño de algoritmos, análisis biomédico e investigación científica.
+    \item \textbf{Artístico ($A$):} innovación visual, ergonomía, diseño de interfaces, síntesis creativa y comunicación conceptual. El verbo ``diseñar'' no implica por sí mismo esta dimensión.
+    \item \textbf{Social ($S$):} trabajo multidisciplinario, comunicación interpersonal, docencia, bioética, administración de personal y atención comunitaria.
+    \item \textbf{Emprendedor ($E$):} liderazgo de proyectos tecnológicos, gestión de costos, negociación, creación de empresas de base tecnológica y toma de decisiones estratégicas.
+    \item \textbf{Convencional ($C$):} cumplimiento de normas y estándares, auditoría, control de calidad, seguridad informática y gestión de registros.
+\end{itemize}
 
-\verb+\+bigskip
+\section{Estructura del prompt de extracción}
+La extracción usó Gemini 2.5 Pro con temperatura 0.2, una carrera por llamada, y respuesta estructurada. La figura~\ref{fig:prompt-extraccion} resume las instrucciones.
 
+\begin{figure}[htbp]
+\centering
+\begin{minipage}{0.95\textwidth}
+\ttfamily\small
+\textbf{INSTRUCCIONES DEL PROMPT DE EXTRACCIÓN (RESUMEN)}\par\smallskip
+\textbf{Rol:} experto en psicología educativa y orientación vocacional (modelo Holland).\par
+\textbf{Entrada:} documento de la carrera (objetivo, perfil de ingreso y perfil de egreso).\par\smallskip
+\textbf{Reglas:}\par
+1. Un criterio por cada dimensión R, I, S, E y C. Cero o uno para A.\par
+2. Cada criterio es una habilidad: verbo en infinitivo, objeto y contexto. Sin sujeto, sin adornos, sin duplicados.\par
+3. Resumen de 2 a 8 palabras (máximo 12).\par
+4. Códigos de dimensión: R=1, I=2, A=3, S=4, E=5, C=6.\par
+5. Orden de fuentes: PERFIL, luego INTERNET y por último CONTINGENCIA. A nunca se obtiene por contingencia.\par
+6. En INTERNET no se aceptan blogs, foros, wikis ni respuestas de IA generativa.\par\smallskip
+\textbf{Salida:} tres hojas: criterios, fuentes y cobertura\_riasec.
+\end{minipage}
+\caption{Resumen de las instrucciones del prompt de extracción}
+\label{fig:prompt-extraccion}
+\end{figure}
 
+\section{Persistencia en la base de datos}
+Los criterios validados se insertaron en la tabla \texttt{criterios} de PostgreSQL, vinculados a las tablas \texttt{carreras}, \texttt{tipos\_criterio} y \texttt{tipos\_riasec}. La carga verifica antes de escribir que existan 66 carreras, 331 criterios de perfil y 66 principales, y que no haya claves duplicadas. El origen de cada criterio (perfil, internet o contingencia) se guarda en el campo \texttt{type\_extraction}. Estos criterios sirvieron para generar los aspirantes sintéticos y para entrenar los modelos Random Forest.
 
-
-
-%%%%%%fin del archivo
-\endinput 
+\endinput

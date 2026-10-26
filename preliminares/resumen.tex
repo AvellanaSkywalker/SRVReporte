@@ -1,9 +1,12 @@
 \chapter{Resumen}
 
+\textbf{Resumen:} La elección de carrera en el nivel superior suele terminar al identificar un área general de conocimiento. Dentro de esa área, el aspirante elige entre programas con perfiles distintos sin una herramienta que compare sus habilidades con cada plan de estudios. Este trabajo desarrolla un sistema de recomendación de carreras del Instituto Politécnico Nacional en la Ciudad de México que opera dentro del área elegida por el aspirante.
 
-\textbf{Resumen:} (pendiente al terminar el proyecto)
+El sistema combina un cuestionario web con calificaciones de objetivos y preguntas por dimensión RIASEC, con respuestas abiertas. La oferta académica se estructuró en una base de datos de 66 carreras, 26 escuelas y 397 criterios extraídos de los documentos oficiales con un modelo de lenguaje y revisados con reglas de una especialista en psicología. Un extractor basado en el modelo de decisiones Jev mide la coincidencia entre las respuestas del aspirante y los criterios de cada carrera. Un modelo Random Forest por área, entrenado con aspirantes sintéticos, estima la afinidad con cada carrera para ordenarlas. Los servicios se comunican mediante eventos en Redis y se empaquetan en contenedores Docker.
 
-\textbf{Palabras Clave:} .
+Se implementaron la base de datos, el extractor, los modelos de afinidad y cuatro de las cinco etapas del sitio web. El extractor se verificó con una evaluación real, con un costo menor a 0.003 USD por evaluación. Los modelos reproducen la fórmula de etiquetado con un $R^2$ cercano a 0.998, valor que no equivale a pertinencia con aspirantes reales. Quedan pendientes el constructor de respuesta, la pantalla de resultados, la integración de la cadena de eventos y la evaluación con aspirantes.
+
+\textbf{Palabras Clave:} recomendación vocacional, RIASEC, Random Forest, procesamiento de lenguaje natural, arquitectura orientada a eventos.
 
 
 

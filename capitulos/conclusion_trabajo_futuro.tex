@@ -1,7 +1,31 @@
+﻿\chapter{Conclusiones y trabajo a futuro}
 
-\chapter{Conclusiones y trabajo a futuro}
+\section*{Conclusiones}
+Este trabajo construyó la base de un sistema de recomendación de carreras del IPN en la Ciudad de México que opera dentro del área elegida por el aspirante. Los resultados principales son los siguientes:
+\begin{itemize}
+    \item Se estructuró la oferta académica en una base de datos de 13 tablas con 3 áreas, 66 carreras, 26 escuelas y 397 criterios clasificados por dimensión RIASEC. Los criterios se extrajeron de los documentos oficiales con un procedimiento reproducible, validaciones automáticas y las reglas de la asesora en psicología.
+    \item Se implementó una arquitectura de servicios desacoplados que se comunican por eventos en Redis. El extractor, basado en Jev, evalúa con una sola llamada cientos de criterios contra las respuestas abiertas del aspirante, a un costo menor a 0.003 USD por evaluación.
+    \item Se entrenó un modelo Random Forest por área que estima la afinidad entre el aspirante y cada carrera. Se formuló como regresión para poder ordenar todas las carreras y presentar las tres mejores con su porcentaje.
+    \item Se desarrolló un cuestionario web de cuatro etapas funcionales que combina calificaciones de objetivos y preguntas por dimensión con respuesta abierta, lo que aporta más resolución que el instrumento institucional de respuestas cerradas.
+\end{itemize}
 
-una conclusi\'on\index{conclusión}
+El sistema todavía no cierra el ciclo completo. No existe el constructor de respuesta, el clasificador no predice en línea, el extractor no publica al clasificador y el sitio no muestra resultados. Por eso las pruebas se limitaron a los componentes aislados y el sistema no se aplicó a aspirantes reales.
+
+La limitación principal es el origen de las etiquetas: los modelos aprenden a reproducir una fórmula definida por los autores sobre aspirantes sintéticos. Su ajuste ($R^2$ cercano a 0.998) confirma que aprendieron esa fórmula, pero no prueba que las recomendaciones sean pertinentes. La hipótesis de que las respuestas abiertas mejoran la pertinencia frente a un método basado solo en respuestas cerradas sigue sin comprobarse.
+
+\section*{Trabajo a futuro}
+El orden sugerido de trabajo es el siguiente:
+\begin{enumerate}
+    \item \textbf{Unir la cadena de eventos.} Insertar al usuario real, guardar los valores extraídos, publicar el \texttt{ClassifierEvent}, implementar la predicción en el clasificador y el constructor de respuesta, y exponer una operación que consulte el resultado por UUID.
+    \item \textbf{Conversión del extractor al modelo.} Definir cómo se imputa el criterio principal cuando no hay justificación, y validar las reglas que convierten la coincidencia de Jev en las variables que espera el modelo. Conviene pedir una justificación en todas las calificaciones, para que el vector real se parezca al de entrenamiento.
+    \item \textbf{Mostrar resultados.} Pantalla de resultados con las tres carreras, sus escuelas, el porcentaje y una explicación, además de la pantalla de resultado no concluyente y el reporte descargable.
+    \item \textbf{Evaluar con datos reales.} Reunir casos de aspirantes con evaluación independiente de especialistas y medir pertinencia en las tres primeras opciones, NDCG@3, cobertura, abstención y latencia, según el protocolo del anexo~\ref{anexo:herramientas}. Registrar las métricas de cada entrenamiento.
+    \item \textbf{Mejorar el tratamiento de las etiquetas.} Reemplazar o calibrar la fórmula con juicios de especialistas, y comparar el modelo contra una línea base de correspondencia de atributos.
+    \item \textbf{Despliegue y operación.} Guardar los modelos entrenados en lugar de entrenarlos al arrancar, dimensionar la memoria de los contenedores, crear los manifiestos faltantes, automatizar pruebas, construcción de imágenes y despliegue en el flujo de CI/CD, y desplegar en Google Cloud.
+    \item \textbf{Robustez y seguridad.} Cambiar la entrega de eventos a ``al menos una vez'' con reintentos, agregar autenticación y límites de uso a la API, restringir el acceso a la base de datos, y definir una política de retención de los datos personales y las respuestas libres.
+    \item \textbf{Cobertura de la oferta.} Ampliar el sistema a otras unidades del IPN y evaluar la dimensión Artística, que hoy solo tiene un criterio.
+\end{enumerate}
 
 %%%%%%fin del archivo
-\endinput 
+\endinput
+

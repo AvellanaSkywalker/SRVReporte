@@ -32,7 +32,10 @@ freely copied and distributed.}
 \usepackage{fourier-orns}
 \usepackage{eucal}
 \usepackage{mathrsfs}
-\usepackage{montserrat} %fuente
+\usepackage[defaultfam]{montserrat} % Fuente de todo el documento
+\renewcommand{\rmdefault}{\sfdefault}
+\renewcommand{\ttdefault}{\sfdefault}
+\renewcommand{\familydefault}{\sfdefault}
 \usepackage{pifont}
 \usepackage{textcomp}
 %%% formato texto %%%
@@ -463,7 +466,7 @@ voffset=0cm}
  \newcommand{\referencias}{\cleardoublepage
 \phantomsection
  \bibliographystyle{ieeetr} \nocite{*}  %estilo ieee
- \bibliography{xbiblioteca} }
+ \bibliography{XBiblioteca} }
 %%%%%%%%márgene para papel
 \newcommand{\cambiamargen}{%%%%%%%%%%%%% Medidas de los margenes
 %	\pagestyle{fancy}
